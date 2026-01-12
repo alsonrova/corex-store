@@ -1,0 +1,119 @@
+.banner {
+  position: relative;
+  width: 100%;
+  padding: 24px 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(8, 12, 20, 0.8) 30%, rgba(8, 12, 20, 0.9) 100%);
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  animation: scroll 40s linear infinite;
+  white-space: nowrap;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.sponsor {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease;
+}
+
+.sponsor:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Edge fade effects */
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(8, 12, 20, 0.95) 0%,
+    rgba(8, 12, 20, 0.6) 40%,
+    transparent 100%
+  );
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(
+    270deg,
+    rgba(8, 12, 20, 0.95) 0%,
+    rgba(8, 12, 20, 0.6) 40%,
+    transparent 100%
+  );
+}
+
+/* Pause on hover for readability */
+.banner:hover .content {
+  animation-play-state: paused;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner {
+    padding: 16px 0;
+  }
+
+  .content {
+    gap: 40px;
+    animation-duration: 30s;
+  }
+
+  .sponsor {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .fadeLeft,
+  .fadeRight {
+    width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    gap: 32px;
+    animation-duration: 25s;
+  }
+
+  .sponsor {
+    font-size: 11px;
+  }
+
+  .fadeLeft,
+  .fadeRight {
+    width: 40px;
+  }
+}
+

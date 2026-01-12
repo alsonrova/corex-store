@@ -1,0 +1,101 @@
+.container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
+}
+
+/* Halo lights - soft, blurred, slow pulsing */
+.halo1 {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 255, 177, 0.12), transparent 65%);
+  filter: blur(80px);
+  animation: pulse1 8s ease-in-out infinite;
+}
+
+.halo2 {
+  position: absolute;
+  top: 40%;
+  right: 5%;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 255, 177, 0.1), transparent 65%);
+  filter: blur(70px);
+  animation: pulse2 10s ease-in-out infinite;
+}
+
+.halo3 {
+  position: absolute;
+  bottom: 10%;
+  left: 25%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 255, 177, 0.08), transparent 65%);
+  filter: blur(60px);
+  animation: pulse3 12s ease-in-out infinite;
+}
+
+.halo4 {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(92, 255, 177, 0.06), transparent 65%);
+  filter: blur(50px);
+  animation: pulse4 14s ease-in-out infinite;
+}
+
+@keyframes pulse1 {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pulse2 {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pulse3 {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pulse4 {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.06);
+  }
+}

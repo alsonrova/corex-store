@@ -1,0 +1,60 @@
+:root {
+  /* Surface */
+  --bg: #04060a;
+  --bg-strong: #020309;
+  --panel: #0b0f16;
+  --panel-strong: #0f1420;
+  --panel-muted: #0d121c;
+
+  /* Borders */
+  --border: #111829;
+  --border-strong: #1f2a3a;
+
+  /* Text */
+  --text-primary: #e9eef9;
+  --text-secondary: #c6d0e2;
+  --muted: #9fb3c8;
+
+  /* Accents */
+  --accent: #5cffb1;
+  --accent-strong: #7affc4;
+  --accent-dim: rgba(92, 255, 177, 0.14);
+  --accent-faint: rgba(92, 255, 177, 0.08);
+
+  /* Feedback */
+  --danger: #ff6b6b;
+  --danger-dim: rgba(255, 107, 107, 0.2);
+
+  /* Shadows & glow */
+  --glow: 0 10px 60px rgba(92, 255, 177, 0.35);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 24px 70px rgba(0, 0, 0, 0.65);
+
+  /* Radii */
+  --radius-xs: 8px;
+  --radius-sm: 12px;
+  --radius: 16px;
+  --radius-lg: 20px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-base: 180ms ease;
+  --transition-slow: 260ms ease;
+
+  /* Misc */
+  --focus-ring: 0 0 0 2px rgba(92, 255, 177, 0.28);
+  --grid-max: 1200px;
+
+  color-scheme: dark;
+}
+

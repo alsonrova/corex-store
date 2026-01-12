@@ -1,0 +1,271 @@
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  min-height: 80vh;
+  padding: 60px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* ECG Heartbeat Background */
+.ecgContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.ecgSvg {
+  width: 100%;
+  height: 120px;
+  overflow: visible;
+}
+
+.ecgPath {
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  animation: ecgDraw 4s ease-in-out infinite;
+}
+
+.ecgPathGlow {
+  stroke-dasharray: 2400;
+  stroke-dashoffset: 2400;
+  filter: blur(4px);
+  animation: ecgDraw 4s ease-in-out infinite;
+}
+
+@keyframes ecgDraw {
+  0% {
+    stroke-dashoffset: 2400;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -2400;
+  }
+}
+
+/* Logo Frame with rotating lights */
+.logoFrame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.frameOuter {
+  position: absolute;
+  inset: -8px;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.frameOuter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 2px solid rgba(92, 255, 177, 0.2);
+}
+
+.rotatingLight1,
+.rotatingLight2 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  filter: blur(20px);
+}
+
+.rotatingLight1 {
+  background: rgba(92, 255, 177, 0.8);
+  animation: rotateLight 6s linear infinite;
+}
+
+.rotatingLight2 {
+  background: rgba(92, 255, 177, 0.6);
+  animation: rotateLight 6s linear infinite;
+  animation-delay: -3s;
+}
+
+@keyframes rotateLight {
+  0% {
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  25% {
+    top: 50%;
+    left: calc(100% - 10px);
+    transform: translateY(-50%);
+  }
+  50% {
+    top: calc(100% - 30px);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  75% {
+    top: 50%;
+    left: -50px;
+    transform: translateY(-50%);
+  }
+  100% {
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.frameInner {
+  position: relative;
+  padding: 40px 60px;
+  border-radius: 20px;
+  background: rgba(8, 12, 20, 0.8);
+  border: 1px solid rgba(92, 255, 177, 0.15);
+  box-shadow: 
+    0 0 60px rgba(92, 255, 177, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.logoText {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-size: clamp(48px, 8vw, 80px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  line-height: 1;
+}
+
+.logoCorex {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logoStore {
+  color: var(--text-primary);
+}
+
+/* Tagline */
+.tagline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+}
+
+.slogan {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--text-primary);
+  text-shadow: 
+    0 0 10px rgba(92, 255, 177, 0.5),
+    0 0 30px rgba(92, 255, 177, 0.3),
+    0 0 60px rgba(92, 255, 177, 0.2);
+}
+
+.subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  margin: 0;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+
+/* CTA Block */
+.ctaBlock {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ctaPrimary,
+.ctaSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+.ctaPrimary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #04110c;
+  box-shadow: 0 8px 30px rgba(92, 255, 177, 0.3);
+}
+
+.ctaPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(92, 255, 177, 0.4);
+}
+
+.ctaSecondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+
+.ctaSecondary:hover {
+  background: rgba(92, 255, 177, 0.1);
+  border-color: rgba(92, 255, 177, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    min-height: 70vh;
+    gap: 32px;
+    padding: 40px 16px;
+  }
+
+  .frameInner {
+    padding: 28px 36px;
+  }
+
+  .logoText {
+    gap: 10px;
+  }
+
+  .ctaBlock {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .ctaPrimary,
+  .ctaSecondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .frameInner {
+    padding: 24px 28px;
+  }
+
+  .logoText {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
