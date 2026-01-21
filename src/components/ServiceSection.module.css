@@ -1,0 +1,1049 @@
+.section {
+  position: relative;
+  padding: 80px 0 100px;
+  background: transparent;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.eyebrowWrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 8px 24px;
+  background: rgba(4, 8, 16, 0.8);
+  border: 1px solid rgba(92, 255, 177, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.cryptoTextTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0.15;
+}
+
+.cryptoText {
+  display: inline-block;
+  white-space: nowrap;
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  animation: scrollCrypto 20s linear infinite;
+}
+
+@keyframes scrollCrypto {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.eyebrow {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.title {
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.titleAccent {
+  background: linear-gradient(135deg, var(--accent), rgba(122, 255, 196, 0.8));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 40px rgba(92, 255, 177, 0.3);
+}
+
+.subtitle {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Glitch Title Effect */
+.glitchTitle {
+  display: inline;
+}
+
+.glitchChar {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  transition: all 0.05s ease;
+}
+
+.glitchChar.glitching {
+  animation: glitchText 0.25s steps(4) infinite;
+  background: #000;
+  color: #fff;
+  padding: 0 4px;
+  margin: 0 -4px;
+  image-rendering: pixelated;
+  text-shadow: 
+    4px 0 #ff0080,
+    -4px 0 #00ffff,
+    0 4px #ff00ff,
+    0 -4px #00ff00,
+    2px 2px #ffff00,
+    -2px -2px #00ff00;
+  box-shadow: 
+    0 0 20px rgba(255, 0, 128, 0.5),
+    0 0 40px rgba(0, 255, 255, 0.3),
+    inset 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+.glitchChar.glitching::before,
+.glitchChar.glitching::after {
+  content: attr(data-char);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.glitchChar.glitching::before {
+  animation: glitchBefore 0.2s steps(3) infinite;
+  color: #ff0080;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  filter: blur(0.5px);
+}
+
+.glitchChar.glitching::after {
+  animation: glitchAfter 0.22s steps(3) infinite;
+  color: #00ffff;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  filter: blur(0.5px);
+}
+
+.glitchPixel {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  pointer-events: none;
+  animation: pixelPop 0.35s steps(2) infinite;
+}
+
+.glitchPixel:nth-child(7) {
+  background: #ff0080;
+  animation-delay: 0.12s;
+  box-shadow: 0 0 8px #ff0080, 0 0 16px #ff0080;
+}
+
+.glitchPixel:nth-child(8) {
+  background: #00ffff;
+  animation-delay: 0.18s;
+  box-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff;
+}
+
+.glitchPixel:nth-child(9) {
+  background: #ff00ff;
+  animation-delay: 0.25s;
+  box-shadow: 0 0 8px #ff00ff, 0 0 16px #ff00ff;
+}
+
+.glitchPixel:nth-child(2) {
+  background: #ff0080;
+  animation-delay: 0s;
+  box-shadow: 0 0 10px #ff0080, 0 0 20px #ff0080;
+}
+
+.glitchPixel:nth-child(3) {
+  background: #00ffff;
+  animation-delay: 0.04s;
+  box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+.glitchPixel:nth-child(4) {
+  background: #ff00ff;
+  animation-delay: 0.08s;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+.glitchPixel:nth-child(5) {
+  background: #00ff00;
+  animation-delay: 0.02s;
+  box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+}
+
+.glitchPixel:nth-child(6) {
+  background: #ffff00;
+  animation-delay: 0.06s;
+  box-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00;
+}
+
+@keyframes glitchText {
+  0%, 100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-4px, 2px);
+  }
+  40% {
+    transform: translate(4px, -2px);
+  }
+  60% {
+    transform: translate(-3px, -2px);
+  }
+  80% {
+    transform: translate(3px, 3px);
+  }
+}
+
+@keyframes glitchBefore {
+  0%, 100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(-5px, 0);
+  }
+  66% {
+    transform: translate(5px, 0);
+  }
+}
+
+@keyframes glitchAfter {
+  0%, 100% {
+    transform: translate(0);
+  }
+  33% {
+    transform: translate(4px, 0);
+  }
+  66% {
+    transform: translate(-4px, 0);
+  }
+}
+
+@keyframes pixelPop {
+  0% {
+    opacity: 0;
+    transform: scale(0) translate(0, 0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) translate(var(--tx, 5px), var(--ty, -5px));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5) translate(var(--tx2, -10px), var(--ty2, 10px));
+  }
+}
+
+/* Pipeline */
+.pipeline {
+  position: relative;
+}
+
+/* Temperature Dashboard Panel */
+.tempDashboard {
+  position: absolute;
+  top: 20px;
+  right: 60px;
+  width: 220px;
+  background: rgba(4, 8, 16, 0.95);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 0;
+  z-index: 10;
+  overflow: hidden;
+  box-shadow: 
+    0 0 20px rgba(92, 255, 177, 0.15),
+    inset 0 0 30px rgba(92, 255, 177, 0.03);
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(92, 255, 177, 0.08);
+  border-bottom: 1px solid rgba(92, 255, 177, 0.2);
+}
+
+.dashboardIcon {
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.dashboardTitle {
+  flex: 1;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(92, 255, 177, 0.3);
+  transition: all 0.3s ease;
+}
+
+.statusDot.statusActive {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.dashboardBody {
+  display: flex;
+  padding: 16px;
+  gap: 16px;
+}
+
+.tempDisplay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tempValue {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.tempNumber {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  color: var(--accent);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(92, 255, 177, 0.5);
+}
+
+.tempUnit {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+.tempLabel {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+.tempGauge {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.gaugeTrack {
+  width: 12px;
+  height: 70px;
+  background: rgba(92, 255, 177, 0.1);
+  border: 1px solid rgba(92, 255, 177, 0.3);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gaugeFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: height 0.3s ease, background 0.3s ease;
+  box-shadow: 0 0 10px rgba(92, 255, 177, 0.5);
+}
+
+.gaugeLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 8px;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.dashboardStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid rgba(92, 255, 177, 0.15);
+  background: rgba(92, 255, 177, 0.02);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'Courier New', monospace;
+}
+
+.statStatus {
+  animation: blink 2s ease-in-out infinite;
+}
+
+.dashboardFooter {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(92, 255, 177, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.scanLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.4;
+  animation: scanMove 3s linear infinite;
+}
+
+.footerText {
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--text-secondary);
+  opacity: 0.4;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes scanMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(40px);
+  }
+}
+
+/* Watercooling tube container - diagonal layout */
+.tubeContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tubeSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Tube segments */
+.tubeSegment {
+  opacity: 0.95;
+}
+
+/* Coolant flow - animation handled by SVG animate element for smoother flow */
+.coolantFlow {
+  will-change: opacity;
+}
+
+/* Bubbles */
+.bubbles {
+  opacity: 0.9;
+}
+
+.bubble1, .bubble2, .bubble3 {
+  opacity: 0.8;
+}
+
+.bubble1 {
+  animation: bubblePulse 1.5s ease-in-out infinite;
+}
+
+.bubble2 {
+  animation: bubblePulse 1.8s ease-in-out infinite 0.3s;
+}
+
+.bubble3 {
+  animation: bubblePulse 2s ease-in-out infinite 0.6s;
+}
+
+@keyframes bubblePulse {
+  0%, 100% { 
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Fittings */
+.fitting {
+  transition: filter 0.3s ease;
+}
+
+.fittingLit {
+  filter: drop-shadow(0 0 8px rgba(92, 255, 177, 0.5));
+}
+
+.fittingCore {
+  animation: fittingPulse 2s ease-in-out infinite;
+}
+
+@keyframes fittingPulse {
+  0%, 100% { 
+    opacity: 1;
+  }
+  50% { 
+    opacity: 0.7;
+  }
+}
+
+/* Steps Grid - Diagonal staircase layout matching the design */
+.stepsGrid {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  padding-top: 20px;
+  gap: 0;
+}
+
+/* Step Card */
+.stepCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 320px;
+  transition: filter 0.6s ease;
+}
+
+/* Diagonal staircase - each step offset to the right and down */
+.stepCard:nth-child(1) {
+  align-self: flex-start;
+  margin-left: 5%;
+  margin-bottom: -20px;
+}
+
+.stepCard:nth-child(2) {
+  align-self: center;
+  margin-bottom: -20px;
+}
+
+.stepCard:nth-child(3) {
+  align-self: flex-end;
+  margin-right: 5%;
+}
+
+/* Frame - default dark/inactive state */
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(145deg, rgba(8, 10, 16, 0.95), rgba(4, 6, 12, 0.98));
+  border: 1px solid rgba(30, 40, 60, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(0.4) saturate(0.3);
+}
+
+/* Lit state - activated by watercooling flow */
+.stepCard.lit .frame {
+  border-color: rgba(92, 255, 177, 0.4);
+  filter: brightness(1) saturate(1);
+  box-shadow: 
+    0 0 40px rgba(92, 255, 177, 0.12),
+    0 0 80px rgba(92, 255, 177, 0.06),
+    inset 0 0 60px rgba(92, 255, 177, 0.04);
+  animation: frameActivate 0.6s ease-out;
+}
+
+@keyframes frameActivate {
+  0% {
+    filter: brightness(0.4) saturate(0.3);
+    box-shadow: none;
+  }
+  50% {
+    filter: brightness(1.3) saturate(1.2);
+    box-shadow: 
+      0 0 60px rgba(92, 255, 177, 0.3),
+      0 0 100px rgba(92, 255, 177, 0.15);
+  }
+  100% {
+    filter: brightness(1) saturate(1);
+    box-shadow: 
+      0 0 40px rgba(92, 255, 177, 0.12),
+      0 0 80px rgba(92, 255, 177, 0.06),
+      inset 0 0 60px rgba(92, 255, 177, 0.04);
+  }
+}
+
+.stepCard.active .frame {
+  border-color: var(--accent);
+  box-shadow: 
+    0 0 50px rgba(92, 255, 177, 0.2),
+    0 0 100px rgba(92, 255, 177, 0.1),
+    inset 0 0 80px rgba(92, 255, 177, 0.06);
+}
+
+/* Frame corners */
+.frameCorner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: rgba(40, 50, 70, 0.4);
+  border-style: solid;
+  border-width: 0;
+  transition: border-color 0.6s ease, box-shadow 0.6s ease;
+  z-index: 2;
+}
+
+.stepCard.lit .frameCorner {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px rgba(92, 255, 177, 0.4);
+  animation: cornerActivate 0.4s ease-out;
+}
+
+@keyframes cornerActivate {
+  0% { border-color: rgba(40, 50, 70, 0.4); box-shadow: none; }
+  50% { border-color: var(--accent-strong); box-shadow: 0 0 15px rgba(92, 255, 177, 0.8); }
+  100% { border-color: var(--accent); box-shadow: 0 0 8px rgba(92, 255, 177, 0.4); }
+}
+
+.frameCorner[data-position="top-left"] {
+  top: 8px;
+  left: 8px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.frameCorner[data-position="top-right"] {
+  top: 8px;
+  right: 8px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.frameCorner[data-position="bottom-left"] {
+  bottom: 8px;
+  left: 8px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.frameCorner[data-position="bottom-right"] {
+  bottom: 8px;
+  right: 8px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* Visual with image */
+.visual {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.stepImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+  transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+  filter: grayscale(0.8);
+}
+
+.stepCard.lit .stepImage {
+  opacity: 1;
+  filter: grayscale(0);
+  animation: imageActivate 0.8s ease-out;
+}
+
+@keyframes imageActivate {
+  0% { opacity: 0.3; filter: grayscale(0.8); }
+  40% { opacity: 1.1; filter: grayscale(0) brightness(1.2); }
+  100% { opacity: 1; filter: grayscale(0) brightness(1); }
+}
+
+.stepCard.active .stepImage {
+  opacity: 1;
+  transform: scale(1.02);
+  filter: grayscale(0) brightness(1.05);
+}
+
+.visualOverlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    rgba(4, 6, 10, 0.3) 0%,
+    rgba(4, 6, 10, 0.5) 100%
+  );
+  z-index: 1;
+}
+
+.stepNumber {
+  font-size: 72px;
+  font-weight: 800;
+  color: rgba(92, 255, 177, 0.05);
+  letter-spacing: -0.04em;
+  transition: color 0.6s ease, text-shadow 0.6s ease;
+  font-family: var(--font-geist-mono), monospace;
+  text-shadow: none;
+  z-index: 2;
+}
+
+.stepCard.lit .stepNumber {
+  color: rgba(92, 255, 177, 0.35);
+  text-shadow: 0 0 40px rgba(92, 255, 177, 0.6);
+  animation: numberActivate 0.6s ease-out;
+}
+
+@keyframes numberActivate {
+  0% { color: rgba(92, 255, 177, 0.05); text-shadow: none; }
+  50% { color: rgba(92, 255, 177, 0.6); text-shadow: 0 0 60px rgba(92, 255, 177, 1); }
+  100% { color: rgba(92, 255, 177, 0.35); text-shadow: 0 0 40px rgba(92, 255, 177, 0.6); }
+}
+
+/* Scan line effect */
+.scanLine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: none;
+}
+
+.stepCard.lit .scanLine {
+  opacity: 0.4;
+  animation: scan 3s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 0.4; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(200px); opacity: 0; }
+}
+
+/* Step info */
+.stepInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px;
+}
+
+.stepIndicator {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  font-family: var(--font-geist-mono), monospace;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease;
+}
+
+.stepCard.lit .stepIndicator {
+  color: var(--accent);
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* HUD Overlay */
+.hudOverlay {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  width: calc(100% - 20px);
+  max-width: 320px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.hudOverlay.visible {
+  opacity: 1;
+  visibility: visible;
+  animation: hudFlicker 0.15s ease-out;
+}
+
+@keyframes hudFlicker {
+  0% { opacity: 0; }
+  20% { opacity: 0.8; }
+  40% { opacity: 0.3; }
+  60% { opacity: 0.9; }
+  80% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.hudFrame {
+  background: rgba(4, 8, 14, 0.96);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 30px rgba(92, 255, 177, 0.2),
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(92, 255, 177, 0.1);
+}
+
+/* Angular cut corners effect */
+.hudFrame::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
+}
+
+.hudHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(92, 255, 177, 0.08);
+  border-bottom: 1px solid rgba(92, 255, 177, 0.15);
+}
+
+.hudIcon {
+  font-size: 10px;
+  color: var(--accent);
+}
+
+.hudLabel {
+  flex: 1;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.hudStatus {
+  font-size: 8px;
+  color: var(--accent);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hudContent {
+  padding: 14px 12px;
+  min-height: 60px;
+}
+
+.hudText {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.cursor {
+  display: inline-block;
+  color: var(--accent);
+  animation: cursorBlink 0.6s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.hudFooter {
+  padding: 6px 12px;
+  background: rgba(92, 255, 177, 0.04);
+  border-top: 1px solid rgba(92, 255, 177, 0.1);
+}
+
+.hudMeta {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .stepCard {
+    width: 280px;
+  }
+
+  .tubeContainer {
+    display: none;
+  }
+
+  .stepNumber {
+    font-size: 56px;
+  }
+
+  .hudOverlay {
+    top: auto;
+    bottom: -10px;
+    transform: translateX(-50%) translateY(100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 60px 0 80px;
+  }
+
+  .stepsGrid {
+    align-items: center;
+  }
+
+  .stepCard {
+    width: 100%;
+    max-width: 350px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    align-self: center !important;
+  }
+
+  .frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .stepNumber {
+    font-size: 48px;
+  }
+
+  .hudOverlay {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    margin-top: 12px;
+  }
+
+  .hudOverlay:not(.visible) {
+    display: none;
+  }
+}

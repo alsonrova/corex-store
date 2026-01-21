@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CursorGlow from "../components/CursorGlow";
 import Navbar from "../components/Navbar";
+import SmoothScroll from "../components/SmoothScroll";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,7 +33,9 @@ export default function RootLayout({
         <AnimatedBackground />
         <CursorGlow />
         <Navbar />
-        {children}
+        <SmoothScroll>
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

@@ -16,6 +16,7 @@ const partners = [
 export default function SponsorsSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const [visiblePartners, setVisiblePartners] = useState<string[]>([]);
   const [showSponsors, setShowSponsors] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -29,20 +30,31 @@ export default function SponsorsSection() {
       const windowHeight = window.innerHeight;
       
       // Check if section is active (top of section is at or above viewport top)
-      // and bottom of section is still below viewport top
+      // and bottom of section is still below viewport bottom
       const sectionTop = rect.top;
       const sectionBottom = rect.bottom;
       
-      const active = sectionTop <= 0 && sectionBottom > windowHeight * 0.5;
-      setIsActive(active);
+      const active = sectionTop <= 0 && sectionBottom > windowHeight;
+      const atBottom = sectionTop < 0 && sectionBottom <= windowHeight;
       
-      if (!active) {
+      setIsActive(active);
+      setIsAtBottom(atBottom);
+      
+      if (!active && !atBottom) {
         if (sectionTop > 0) {
           // Section hasn't been reached yet
           setScrollProgress(0);
           setVisiblePartners([]);
           setShowSponsors(false);
         }
+        return;
+      }
+
+      if (atBottom) {
+        // Section is at bottom - show final state
+        setScrollProgress(1);
+        setVisiblePartners(partners.map(p => p.id));
+        setShowSponsors(true);
         return;
       }
 
@@ -77,8 +89,8 @@ export default function SponsorsSection() {
 
   return (
     <section className={styles.section} id="sponsors" ref={sectionRef}>
-      {/* Fixed overlay that appears when section is active */}
-      <div className={`${styles.fixedOverlay} ${isActive ? styles.active : ""}`}>
+      {/* Fixed overlay that appears when section is active, becomes static when at bottom */}
+      <div className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""}`}>
         {/* Section header */}
         <div className={styles.sectionHeader} style={{ opacity: Math.max(0, 1 - scrollProgress * 2.5) }}>
           <p className={styles.eyebrow}>Ecosystem</p>
