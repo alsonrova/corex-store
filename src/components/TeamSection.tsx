@@ -150,7 +150,7 @@ export default function TeamSection() {
             </div>
             <div className={styles.frameContent}>
               <img
-                src="/corex_inside.png"
+                src=""
                 alt="COREX Workspace"
                 className={styles.frameImage}
               />
@@ -275,7 +275,7 @@ export default function TeamSection() {
             </div>
             <div className={styles.frameContent}>
               <img
-                src="/client_and_customer.png"
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80"
                 alt="COREX Team"
                 className={styles.frameImage}
               />

@@ -1,87 +1,71 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useRef, useEffect, useState, ReactNode } from "react";
+import { motion, useSpring, useTransform, MotionValue } from "framer-motion";
 
 interface SmoothScrollProps {
   children: ReactNode;
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const scrollY = useSpring(0, {
+    stiffness: 400,
+    damping: 20,
+    mass: 0.1,
+  });
+
   useEffect(() => {
-    let currentY = window.scrollY;
-    let targetY = window.scrollY;
-    let rafId: number;
-    let isScrolling = false;
-    let isUserScrolling = false;
-
-    const ease = 0.12;
-
-    const smoothScroll = () => {
-      const diff = targetY - currentY;
-      
-      if (Math.abs(diff) > 0.5) {
-        currentY += diff * ease;
-        isUserScrolling = true;
-        window.scrollTo(0, currentY);
-        isUserScrolling = false;
-        rafId = requestAnimationFrame(smoothScroll);
-      } else {
-        currentY = targetY;
-        isScrolling = false;
+    const updateHeight = () => {
+      if (scrollRef.current) {
+        setContentHeight(scrollRef.current.scrollHeight);
       }
     };
 
-    const updateTarget = (delta: number) => {
-      targetY += delta;
-      targetY = Math.max(0, Math.min(targetY, document.body.scrollHeight - window.innerHeight));
-      
-      if (!isScrolling) {
-        isScrolling = true;
-        rafId = requestAnimationFrame(smoothScroll);
-      }
-    };
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
 
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      updateTarget(e.deltaY);
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const keyDeltas: Record<string, number> = {
-        ArrowDown: 100,
-        ArrowUp: -100,
-        PageDown: window.innerHeight * 0.8,
-        PageUp: -window.innerHeight * 0.8,
-        Space: window.innerHeight * 0.8,
-        Home: -targetY,
-        End: document.body.scrollHeight - window.innerHeight - targetY,
-      };
-
-      const delta = keyDeltas[e.key];
-      if (delta !== undefined) {
-        e.preventDefault();
-        updateTarget(delta);
-      }
-    };
-
-    const handleScroll = () => {
-      if (!isUserScrolling) {
-        targetY = window.scrollY;
-        currentY = window.scrollY;
-      }
-    };
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    const resizeObserver = new ResizeObserver(updateHeight);
+    if (scrollRef.current) {
+      resizeObserver.observe(scrollRef.current);
+    }
 
     return () => {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
+      window.removeEventListener("resize", updateHeight);
+      resizeObserver.disconnect();
     };
   }, []);
 
-  return <>{children}</>;
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollY.set(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scrollY]);
+
+  const y = useTransform(scrollY, (value) => -value);
+
+  return (
+    <>
+      <div style={{ height: contentHeight }} />
+      <motion.div
+        ref={scrollRef}
+        style={{
+          y,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          width: "100%",
+          willChange: "transform",
+        }}
+      >
+        {children}
+      </motion.div>
+    </>
+  );
 }
