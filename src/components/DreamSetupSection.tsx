@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import styles from "./DreamSetupSection.module.css";
 
@@ -16,34 +16,80 @@ const ROTATION_DURATION = 4000;
 
 const GLITCH_INTERVAL = 6000;
 const GLITCH_DURATION = 300;
+const REVEAL_STAGGER = 350;
+const IMAGE_REVEAL_DURATION = 2000;
 
 export default function DreamSetupSection() {
   const [angle, setAngle] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [hasRevealed, setHasRevealed] = useState(false);
+  const [titleState, setTitleState] = useState<"hidden" | "entering" | "visible">("hidden");
+  const [isCtaVisible, setIsCtaVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Carousel rotation
+  // Scroll detection
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Title entrance
+  useEffect(() => {
+    if (!isInView) return;
+    setTitleState("entering");
+    const timer = setTimeout(() => setTitleState("visible"), 900);
+    return () => clearTimeout(timer);
+  }, [isInView]);
+
+  // Images reveal complete
+  useEffect(() => {
+    if (!isInView) return;
+    const lastDelay = 300 + (images.length - 1) * REVEAL_STAGGER;
+    const timer = setTimeout(() => setHasRevealed(true), lastDelay + IMAGE_REVEAL_DURATION + 300);
+    return () => clearTimeout(timer);
+  }, [isInView]);
+
+  // CTA appearance
+  useEffect(() => {
+    if (!isInView) return;
+    const timer = setTimeout(() => setIsCtaVisible(true), 2800);
+    return () => clearTimeout(timer);
+  }, [isInView]);
+
+  // Carousel rotation — only after reveal
+  useEffect(() => {
+    if (!hasRevealed) return;
     const interval = setInterval(() => {
       setAngle((prev) => prev - 120);
     }, ROTATION_DURATION);
-
     return () => clearInterval(interval);
-  }, []);
+  }, [hasRevealed]);
 
-  // Auto glitch effect every 6 seconds when not hovered
+  // Auto glitch — only after reveal + title visible
   useEffect(() => {
-    if (isHovered) return;
-
+    if (isHovered || !hasRevealed || titleState !== "visible") return;
     const interval = setInterval(() => {
       setIsGlitching(true);
       setTimeout(() => setIsGlitching(false), GLITCH_DURATION);
     }, GLITCH_INTERVAL);
-
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, hasRevealed, titleState]);
 
   const handleMouseEnter = () => {
+    if (titleState !== "visible") return;
     setIsHovered(true);
     setIsGlitching(true);
   };
@@ -54,17 +100,17 @@ export default function DreamSetupSection() {
   };
 
   return (
-    <section className={styles.section} id="dream-setup">
+    <section className={styles.section} id="dream-setup" ref={sectionRef}>
       {/* Circuit background */}
-      <div className={styles.circuitBg} aria-hidden>
+      <div className={`${styles.circuitBg} ${isInView ? styles.circuitVisible : ""}`} aria-hidden>
         <svg className={styles.circuitSvg} viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
           <defs>
             <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgba(92, 255, 177, 0.35)">
-                <animate attributeName="offset" values="-1;1" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="offset" values="-1;1;-1" dur="8s" repeatCount="indefinite" />
               </stop>
               <stop offset="30%" stopColor="rgba(92, 255, 177, 0.08)">
-                <animate attributeName="offset" values="-0.7;1.3" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="offset" values="-0.7;1.3;-0.7" dur="8s" repeatCount="indefinite" />
               </stop>
             </linearGradient>
             
@@ -169,8 +215,11 @@ export default function DreamSetupSection() {
         </svg>
       </div>
 
-      <h2 
-        className={`${styles.title} ${isGlitching ? styles.glitching : ''}`}
+      <h2
+        className={`${styles.title} ${
+          titleState === "hidden" ? styles.titleHidden :
+          titleState === "entering" ? styles.titleEntering : ""
+        } ${isGlitching && titleState === "visible" ? styles.glitching : ""}`}
         data-text="Build Your Dream Setup"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -181,23 +230,17 @@ export default function DreamSetupSection() {
       <div className={styles.showcase}>
         <div className={styles.carouselContainer}>
           {images.map((src, index) => {
-            // Each image is positioned 120 degrees apart
             const baseAngle = index * 120;
-            const currentAngle = baseAngle + angle;
+            const currentAngle = baseAngle + (hasRevealed ? angle : 0);
             const radians = (currentAngle * Math.PI) / 180;
-            
-            // Calculate position on an ellipse (tilted 3D circle)
+
             const x = Math.sin(radians) * RADIUS;
             const z = Math.cos(radians);
-            
-            // Y follows an elliptical arc (creates curved trajectory)
-            // Items go up when moving to the back, down when coming to front
             const ellipseHeight = 80;
             const y = -Math.cos(radians) * ellipseHeight;
-            
-            // Scale and opacity based on z position (depth)
-            const scale = 0.35 + (z + 1) * 0.35; // 0.35 to 1.05
-            const opacity = 0.2 + (z + 1) * 0.4; // 0.2 to 1
+
+            const scale = 0.35 + (z + 1) * 0.35;
+            const depthOpacity = 0.2 + (z + 1) * 0.4;
             const zIndex = Math.round((z + 1) * 10);
 
             return (
@@ -208,39 +251,50 @@ export default function DreamSetupSection() {
                   x,
                   y,
                   scale,
-                  opacity,
+                  opacity: hasRevealed ? depthOpacity : 1,
                   zIndex,
                 }}
                 transition={{
-                  duration: 1.4,
+                  duration: hasRevealed ? 1.4 : 0,
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
-                style={{
-                  zIndex,
-                }}
+                style={{ zIndex }}
               >
-                <Image
-                  src={src}
-                  alt={`Gaming PC ${index + 1}`}
-                  width={400}
-                  height={400}
-                  className={styles.image}
-                  style={{
-                    filter: z > 0.5 
-                      ? "drop-shadow(0 30px 50px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(92,255,177,0.2))"
-                      : "drop-shadow(0 20px 30px rgba(0,0,0,0.4))",
-                  }}
-                />
+                <div
+                  className={`${styles.imageRevealer} ${isInView ? styles.revealing : ""}`}
+                  style={{ "--reveal-delay": `${300 + index * REVEAL_STAGGER}ms` } as React.CSSProperties}
+                >
+                  <Image
+                    src={src}
+                    alt={`Gaming PC ${index + 1}`}
+                    width={400}
+                    height={400}
+                    className={styles.image}
+                    style={{
+                      filter: hasRevealed && z > 0.5
+                        ? "drop-shadow(0 30px 50px rgba(0,0,0,0.6))"
+                        : hasRevealed
+                          ? "drop-shadow(0 20px 30px rgba(0,0,0,0.4))"
+                          : undefined,
+                    }}
+                  />
+                </div>
+                {isInView && (
+                  <div
+                    className={styles.scanLine}
+                    style={{ "--reveal-delay": `${300 + index * REVEAL_STAGGER}ms` } as React.CSSProperties}
+                  />
+                )}
               </motion.div>
             );
           })}
         </div>
-        
+
         {/* Ellipse track */}
-        <div className={styles.ellipseTrack} />
+        <div className={`${styles.ellipseTrack} ${hasRevealed ? styles.trackVisible : ""}`} />
       </div>
 
-      <a href="#products" className={styles.ctaLink}>
+      <a href="#products" className={`${styles.ctaLink} ${isCtaVisible ? styles.ctaVisible : ""}`}>
         Explore the Store
         <span className={styles.arrow}>→</span>
       </a>

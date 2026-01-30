@@ -1,6 +1,7 @@
 import AboutSection from "../components/AboutSection";
 import DreamSetupSection from "../components/DreamSetupSection";
 import HeroShowcase from "../components/HeroShowcase";
+import ReviewsSection from "../components/ReviewsSection";
 import ServiceSection from "../components/ServiceSection";
 import SponsorsSection from "../components/SponsorsSection";
 import TeamSection from "../components/TeamSection";
@@ -15,7 +16,7 @@ export default function Home() {
         <HeroShowcase />
 
         <DreamSetupSection />
-
+        
         <AboutSection />
 
         <ServiceSection />
@@ -23,6 +24,9 @@ export default function Home() {
         <SponsorsSection />
 
         <TeamSection />
+
+        <ReviewsSection />
+
       </main>
 
       <footer className={styles.footer}>
