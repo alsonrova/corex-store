@@ -271,11 +271,9 @@ export default function DreamSetupSection() {
                     height={400}
                     className={styles.image}
                     style={{
-                      filter: hasRevealed && z > 0.5
-                        ? "drop-shadow(0 30px 50px rgba(0,0,0,0.6))"
-                        : hasRevealed
-                          ? "drop-shadow(0 20px 30px rgba(0,0,0,0.4))"
-                          : undefined,
+                      filter: hasRevealed
+                        ? "drop-shadow(0 20px 30px rgba(0,0,0,0.4))"
+                        : undefined,
                     }}
                   />
                 </div>
