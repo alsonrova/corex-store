@@ -1,0 +1,451 @@
+/* ══════════════════════════════════════
+   ReviewsSection — Scroll-driven community section
+   ══════════════════════════════════════ */
+
+/* ── Section container (tall scroll trigger) ── */
+.section {
+  position: relative;
+  height: 500vh;
+  background: transparent;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(92, 255, 177, 0.3), transparent);
+  z-index: 10;
+}
+
+/* ── Fixed overlay ── */
+.fixedOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.fixedOverlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fixedOverlay.atBottom {
+  position: absolute;
+  top: auto;
+  bottom: 0;
+  height: auto;
+  min-height: 100vh;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ── Section header ── */
+.sectionHeader {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Scroll indicator ── */
+.scrollIndicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}
+
+.scrollArrow {
+  font-size: 16px;
+  animation: reviewBounce 2s ease-in-out infinite;
+}
+
+@keyframes reviewBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* ── Cards layer ── */
+.cardsLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.cardWrapper {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -160px;
+  transition: transform 0.08s ease-out, opacity 0.25s ease;
+  pointer-events: auto;
+  z-index: 5;
+}
+
+/* ── Floating animation (Phase 4+) — applied on inner card ── */
+.cardWrapper.floating .reviewCard {
+  animation: cardFloatInner 6s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+
+@keyframes cardFloatInner {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(var(--float-x, 5px), var(--float-y, -8px));
+  }
+  50% {
+    transform: translate(calc(var(--float-x, 5px) * -1), calc(var(--float-y, -8px) * -0.5));
+  }
+  75% {
+    transform: translate(calc(var(--float-x, 5px) * 0.5), calc(var(--float-y, -8px) * 0.7));
+  }
+}
+
+/* ── Review card — Instagram-style post ── */
+.reviewCard {
+  width: 260px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.reviewCard:hover {
+  border-color: var(--accent);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(92, 255, 177, 0.06);
+}
+
+/* Card header — avatar + username + handle + date */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.avatarInitials {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bg);
+  letter-spacing: -0.02em;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.username {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.handle {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.date {
+  font-size: 11px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Card image — setup photo */
+.cardImage {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  position: relative;
+}
+
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Card footer — likes + review text */
+.cardFooter {
+  padding: 10px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.heartIcon {
+  color: #ff4d6a;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.likes {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.reviewText {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.reviewAuthor {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-right: 4px;
+}
+
+/* ── Network mesh background (Phase 5+) ── */
+.networkBg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.networkSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.networkLine {
+  opacity: 0.7;
+}
+
+.networkNode {
+  animation: nodePulse 3s ease-in-out infinite;
+  animation-delay: var(--node-delay, 0s);
+  will-change: opacity;
+}
+
+@keyframes nodePulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* ── Scrolling text overlay ── */
+.scrollingTextLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.scrollingRow {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  opacity: var(--row-opacity, 0.5);
+  white-space: nowrap;
+}
+
+.scrollingContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 48px;
+  animation: reviewTextScroll var(--scroll-duration, 30s) linear infinite;
+  will-change: transform;
+}
+
+/* Pause all row animations when the layer is invisible */
+.scrollingPaused .scrollingContent {
+  animation-play-state: paused;
+}
+
+.scrollingContent.scrollReverse {
+  animation-name: reviewTextScrollReverse;
+}
+
+@keyframes reviewTextScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes reviewTextScrollReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.scrollingPhrase {
+  flex-shrink: 0;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+/* ── Progress bar ── */
+.progressBar {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 90px;
+  background: rgba(92, 255, 177, 0.1);
+  border-radius: 2px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: height 0.08s ease-out;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .section {
+    height: 400vh;
+  }
+
+  .reviewCard {
+    width: 230px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    height: 350vh;
+  }
+
+  .sectionHeader {
+    top: 50px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .reviewCard {
+    width: 200px;
+  }
+
+  .cardHeader {
+    padding: 10px 12px;
+  }
+
+  .cardFooter {
+    padding: 8px 12px 12px;
+  }
+
+  .reviewText {
+    font-size: 12px;
+  }
+
+  .progressBar {
+    right: 10px;
+    height: 60px;
+  }
+
+  .scrollingContent {
+    gap: 32px;
+  }
+}
