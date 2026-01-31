@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { motion } from "framer-motion";
 import ReviewCard from "./ReviewCard";
 import styles from "./ReviewsSection.module.css";
 
@@ -76,93 +77,32 @@ const reviews: Review[] = [
   },
 ];
 
-// Scrolling text — 7 rows, each with its own phrases, varied lengths, authentic diverse content
-const ROW_PHRASES: string[][] = [
-  [
-    "Absolutely stunning build quality 🔥",
-    "worth it",
-    "Best PC I've ever owned honestly",
-    "cable management is next level",
-    "INSANE performance",
-    "this thing is silent???",
-    "10/10 would buy again",
-    "COREX changed the game for me",
-  ],
-  [
-    "livraison rapide",
-    "THE AIRFLOW ON THIS THING 💀",
-    "no regrets",
-    "My friends are so jealous lmao",
-    "runs everything on ultra",
-    "service client au top",
-    "bought one for my brother too",
-    "premium",
-  ],
-  [
-    "clean af",
-    "I was skeptical but wow this is different",
-    "meilleur achat de l'année",
-    "ZERO noise. ZERO.",
-    "they really care about details",
-    "built like a tank",
-    "aesthetic perfection",
-    "je recommande à 100%",
-  ],
-  [
-    "the packaging alone was an experience",
-    "FIRE 🔥🔥🔥",
-    "can't go back to anything else now",
-    "absolute unit",
-    "my setup is finally complete",
-    "qualité irréprochable",
-    "runs cooler than expected",
-    "this is the one",
-  ],
-  [
-    "ok i'm obsessed",
-    "Customer support replied in 10 min. 10. MINUTES.",
-    "magnifique",
-    "worth every single cent",
-    "BEAST MODE",
-    "the rgb integration is so clean",
-    "built different fr",
-    "told everyone at work about it",
-  ],
-  [
-    "S-tier build",
-    "je suis fan",
-    "finally a PC that matches my setup aesthetic",
-    "GODLIKE cooling",
-    "trusted the reviews and wasn't disappointed",
-    "no bloatware, just pure performance",
-    "shipped faster than Amazon lol",
-    "incroyable",
-  ],
-  [
-    "this >>> everything else",
-    "took a risk on a boutique brand, best decision ever",
-    "bravo COREX",
-    "dead silent even under load",
-    "ELITE",
-    "my wallet cried but my eyes are happy",
-    "they even followed up after delivery",
-    "build quality speaks for itself",
-  ],
+// Scrolling comments — each one isolated on its own row, staggered delays
+const SCROLL_COMMENTS = [
+  { text: "Absolutely stunning build quality \u{1F525}", y: 4, speed: 22, size: 17, op: 0.6, delay: 0 },
+  { text: "INSANE performance", y: 12, speed: 26, size: 21, op: 0.75, delay: 4 },
+  { text: "this thing is silent???", y: 20, speed: 18, size: 12, op: 0.3, delay: 9 },
+  { text: "FIRE \u{1F525}\u{1F525}\u{1F525}", y: 28, speed: 16, size: 24, op: 0.85, delay: 1 },
+  { text: "livraison rapide", y: 35, speed: 24, size: 11, op: 0.25, delay: 11 },
+  { text: "worth it", y: 42, speed: 15, size: 14, op: 0.4, delay: 6 },
+  { text: "ZERO noise. ZERO.", y: 49, speed: 20, size: 19, op: 0.6, delay: 3 },
+  { text: "clean af", y: 55, speed: 14, size: 15, op: 0.4, delay: 8 },
+  { text: "BEAST MODE", y: 62, speed: 21, size: 26, op: 0.85, delay: 2 },
+  { text: "meilleur achat de l'ann\u00e9e", y: 68, speed: 23, size: 13, op: 0.3, delay: 10 },
+  { text: "built different fr", y: 74, speed: 17, size: 16, op: 0.5, delay: 5 },
+  { text: "S-tier build", y: 80, speed: 20, size: 20, op: 0.7, delay: 7 },
+  { text: "ELITE", y: 86, speed: 15, size: 28, op: 0.9, delay: 3 },
+  { text: "aesthetic perfection", y: 92, speed: 22, size: 18, op: 0.55, delay: 9 },
+  { text: "10/10 would buy again", y: 8, speed: 25, size: 15, op: 0.45, delay: 13 },
+  { text: "GODLIKE cooling", y: 38, speed: 19, size: 13, op: 0.3, delay: 15 },
+  { text: "premium", y: 58, speed: 16, size: 19, op: 0.5, delay: 12 },
+  { text: "magnifique", y: 46, speed: 21, size: 12, op: 0.25, delay: 14 },
+  { text: "ok i'm obsessed", y: 17, speed: 18, size: 15, op: 0.4, delay: 7 },
+  { text: "cable management is next level", y: 76, speed: 24, size: 10, op: 0.2, delay: 16 },
 ];
 
-// Row configs: 7 rows, varied sizes, opacities, speeds, and directions
-const ROW_CONFIGS = [
-  { speed: 55, size: 22, opacity: 0.85, top: 4, reverse: false },
-  { speed: 40, size: 12, opacity: 0.3, top: 16, reverse: true },
-  { speed: 48, size: 18, opacity: 0.65, top: 30, reverse: false },
-  { speed: 35, size: 10, opacity: 0.2, top: 44, reverse: true },
-  { speed: 52, size: 24, opacity: 0.9, top: 58, reverse: false },
-  { speed: 38, size: 13, opacity: 0.35, top: 74, reverse: true },
-  { speed: 45, size: 16, opacity: 0.55, top: 88, reverse: false },
-];
-
-// Phase 4 scattered positions (vw, vh) — positioned higher in viewport
-const NETWORK_POSITIONS = [
+// Phase 4 scattered card positions (vw, vh)
+const SCATTER_POSITIONS = [
   { x: 6, y: 18 },
   { x: 68, y: 10 },
   { x: 32, y: 38 },
@@ -172,8 +112,10 @@ const NETWORK_POSITIONS = [
 
 const CARD_ENTRY_THRESHOLDS = [0.0, 0.22, 0.28, 0.34, 0.40];
 
-// Pre-compute doubled phrases (static — no need to recreate on every render)
-const DOUBLED_PHRASES = ROW_PHRASES.map((phrases) => [...phrases, ...phrases]);
+// Spring configs
+const SPRING_ENTRY = { type: "spring" as const, stiffness: 120, damping: 14, mass: 0.8 };
+const SPRING_SCATTER = { type: "spring" as const, stiffness: 80, damping: 18, mass: 1 };
+const SPRING_REPOSITION = { type: "spring" as const, stiffness: 200, damping: 22 };
 
 // ── Component ──
 
@@ -181,7 +123,16 @@ export default function ReviewsSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [windowSize, setWindowSize] = useState({ w: 0, h: 0 });
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Window size tracking
+  useEffect(() => {
+    const update = () => setWindowSize({ w: window.innerWidth, h: window.innerHeight });
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   // Scroll handler (throttled via rAF)
   useEffect(() => {
@@ -232,153 +183,131 @@ export default function ReviewsSection() {
 
   // ── Derived values ──
 
-  const visibleCount = CARD_ENTRY_THRESHOLDS.filter(
-    (t) => scrollProgress >= t
-  ).length;
-  const shouldFloat = scrollProgress >= 0.45;
+  const visibleCount = CARD_ENTRY_THRESHOLDS.filter((t) => scrollProgress >= t).length;
+  const shouldFloat = scrollProgress >= 0.58;
 
-  // Network bg opacity (Phase 5: 0.50 → 0.65) — increased max opacity
-  const networkOpacity =
-    scrollProgress < 0.5
+  const webOpacity =
+    scrollProgress < 0.62
       ? 0
-      : scrollProgress < 0.65
-        ? ((scrollProgress - 0.5) / 0.15) * 0.35
-        : 0.35;
+      : scrollProgress < 0.75
+        ? ((scrollProgress - 0.62) / 0.13) * 0.4
+        : 0.4;
 
-  // Scrolling text opacity (starts at 0.50 now, not 0.78)
-  const scrollTextOpacity =
-    scrollProgress < 0.5 ? 0 : Math.min((scrollProgress - 0.5) / 0.1, 1);
+  const commentsOpacity =
+    scrollProgress < 0.62 ? 0 : Math.min((scrollProgress - 0.62) / 0.1, 1);
 
-  // Header fades out as scroll starts
   const headerOpacity = Math.max(0, 1 - scrollProgress * 3);
   const indicatorOpacity = Math.max(0, 1 - scrollProgress * 4);
 
-  // ── Card position calculator ──
+  // ── Card animation target (pixel values for Framer Motion) ──
 
-  function getCardTransform(index: number): React.CSSProperties {
+  function getCardTarget(index: number) {
+    const { w, h } = windowSize;
+    if (w === 0) return { x: 1500, y: 0, opacity: 0, scale: 0.8 };
+
     const threshold = CARD_ENTRY_THRESHOLDS[index];
 
-    // Not yet visible
     if (index > 0 && scrollProgress < threshold) {
-      return { transform: "translateX(100vw)", opacity: 0 };
+      return { x: w + 100, y: 0, opacity: 0, scale: 0.8 };
     }
 
-    // Phase 4+: network scattered positions — compensate for CSS top: 50% / margin-top: -160px
-    if (scrollProgress >= 0.45) {
-      const pos = NETWORK_POSITIONS[index];
-      return {
-        transform: `translate(${pos.x}vw, calc(${pos.y - 50}vh + 160px))`,
-        opacity: 1,
-      };
+    if (scrollProgress >= 0.58) {
+      const pos = SCATTER_POSITIONS[index];
+      const x = (pos.x / 100) * w;
+      const y = ((pos.y - 50) / 100) * h + 160;
+      return { x, y, opacity: 1, scale: 1 };
     }
 
-    // Phase 1: first card enters from right (0 → 0.08)
     if (scrollProgress < 0.08) {
-      if (index > 0) return { transform: "translateX(100vw)", opacity: 0 };
+      if (index > 0) return { x: w + 100, y: 0, opacity: 0, scale: 0.8 };
       const p = scrollProgress / 0.08;
-      const x = 100 - p * 40;
-      return { transform: `translateX(${x}vw)`, opacity: Math.min(p * 2, 1) };
+      const x = ((100 - p * 40) / 100) * w;
+      return { x, y: 0, opacity: Math.min(p * 2, 1), scale: 0.9 + p * 0.1 };
     }
 
-    // Phase 2: first card centers (0.08 → 0.18)
     if (scrollProgress < 0.18) {
-      if (index > 0) return { transform: "translateX(100vw)", opacity: 0 };
+      if (index > 0) return { x: w + 100, y: 0, opacity: 0, scale: 0.8 };
       const p = (scrollProgress - 0.08) / 0.1;
-      const x = 60 - p * 23;
-      return { transform: `translateX(${x}vw)`, opacity: 1 };
+      const x = ((60 - p * 23) / 100) * w;
+      return { x, y: 0, opacity: 1, scale: 1 };
     }
 
-    // Phase 3: accumulation (0.18 → 0.45)
     const totalWidth = 80;
     const startX = 10;
     const count = Math.max(visibleCount, 1);
     const spacing = totalWidth / (count + 1);
-    const targetX = startX + spacing * (index + 1) - 10;
+    const targetVw = startX + spacing * (index + 1) - 10;
+    const targetX = (targetVw / 100) * w;
 
-    // Entry animation for cards 1-4
     if (index >= 1) {
+      const threshold = CARD_ENTRY_THRESHOLDS[index];
       const entryEnd = threshold + 0.04;
       if (scrollProgress < threshold) {
-        return { transform: "translateX(100vw)", opacity: 0 };
+        return { x: w + 100, y: 0, opacity: 0, scale: 0.8 };
       }
       if (scrollProgress < entryEnd) {
         const ep = (scrollProgress - threshold) / 0.04;
-        const currentX = 100 - ep * (100 - targetX);
-        return {
-          transform: `translateX(${currentX}vw)`,
-          opacity: Math.min(ep * 2, 1),
-        };
+        const currentX = w + 100 - ep * (w + 100 - targetX);
+        return { x: currentX, y: 0, opacity: Math.min(ep * 2, 1), scale: 0.85 + ep * 0.15 };
       }
     }
 
-    return { transform: `translateX(${targetX}vw)`, opacity: 1 };
+    return { x: targetX, y: 0, opacity: 1, scale: 1 };
   }
 
-  // ── Network SVG (memoized — static content) ──
-  const networkSvgContent = useMemo(() => {
-    const lines: [number, number][] = [
-      [0, 1], [0, 2], [1, 3], [2, 3], [2, 4], [3, 4],
-      [0, 3], [1, 4],
-    ];
+  // ── Card spring config ──
 
-    const lineElements = lines.map(([a, b], i) => {
-      const pa = NETWORK_POSITIONS[a];
-      const pb = NETWORK_POSITIONS[b];
-      const x1 = (pa.x / 100) * 1200;
-      const y1 = (pa.y / 100) * 800;
-      const x2 = (pb.x / 100) * 1200;
-      const y2 = (pb.y / 100) * 800;
-      const isSecondary = i >= 6;
+  function getCardSpring(index: number) {
+    const threshold = CARD_ENTRY_THRESHOLDS[index];
+    if (index === 0 && scrollProgress < 0.18) return SPRING_ENTRY;
+    if (index >= 1 && scrollProgress >= threshold && scrollProgress < threshold + 0.06) return SPRING_ENTRY;
+    if (scrollProgress >= 0.53 && scrollProgress <= 0.68) return SPRING_SCATTER;
+    return SPRING_REPOSITION;
+  }
 
-      return (
-        <line
-          key={`l${i}`}
-          x1={x1}
-          y1={y1}
-          x2={x2}
-          y2={y2}
-          stroke="rgba(92, 255, 177, 0.5)"
-          strokeWidth={isSecondary ? 1 : 1.5}
-          className={styles.networkLine}
-        />
+  // ── Web mesh SVG (memoized — full-screen grid) ──
+
+  const webMeshContent = useMemo(() => {
+    const w = 1400;
+    const h = 1000;
+    const cols = 18;
+    const rows = 13;
+    const colSpacing = w / cols;
+    const rowSpacing = h / rows;
+    const lineColor = "rgba(92, 255, 177, 0.07)";
+    const nodeColor = "rgba(92, 255, 177, 0.14)";
+
+    const elements: React.ReactElement[] = [];
+
+    for (let i = 0; i <= rows; i++) {
+      const y = i * rowSpacing;
+      elements.push(
+        <line key={`h${i}`} x1={0} y1={y} x2={w} y2={y} stroke={lineColor} strokeWidth={0.8} />
       );
-    });
+    }
 
-    const cardNodes = NETWORK_POSITIONS.map((p) => ({
-      cx: (p.x / 100) * 1200,
-      cy: (p.y / 100) * 800,
-      r: 5,
-    }));
+    for (let i = 0; i <= cols; i++) {
+      const x = i * colSpacing;
+      elements.push(
+        <line key={`v${i}`} x1={x} y1={0} x2={x} y2={h} stroke={lineColor} strokeWidth={0.8} />
+      );
+    }
 
-    const extraNodes = [
-      { cx: 300, cy: 200, r: 2.5 },
-      { cx: 600, cy: 150, r: 2.5 },
-      { cx: 540, cy: 500, r: 2.5 },
-      { cx: 150, cy: 350, r: 2.5 },
-      { cx: 900, cy: 300, r: 2.5 },
-      { cx: 480, cy: 280, r: 2.5 },
-      { cx: 1050, cy: 180, r: 2 },
-      { cx: 100, cy: 600, r: 2 },
-    ];
+    for (let iy = 0; iy <= rows; iy += 2) {
+      for (let ix = 0; ix <= cols; ix += 2) {
+        elements.push(
+          <circle
+            key={`n${ix}-${iy}`}
+            cx={ix * colSpacing}
+            cy={iy * rowSpacing}
+            r={1.5}
+            fill={nodeColor}
+          />
+        );
+      }
+    }
 
-    const nodeElements = [...cardNodes, ...extraNodes].map((node, i) => (
-      <circle
-        key={`n${i}`}
-        cx={node.cx}
-        cy={node.cy}
-        r={node.r}
-        fill="rgba(92, 255, 177, 0.6)"
-        className={styles.networkNode}
-        style={{ "--node-delay": `${i * 0.25}s` } as React.CSSProperties}
-      />
-    ));
-
-    return (
-      <g>
-        {lineElements}
-        {nodeElements}
-      </g>
-    );
+    return <g>{elements}</g>;
   }, []);
 
   // ── Render ──
@@ -389,94 +318,88 @@ export default function ReviewsSection() {
         className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""}`}
       >
         {/* Section header */}
-        <div
-          className={styles.sectionHeader}
-          style={{ opacity: headerOpacity }}
-        >
+        <div className={styles.sectionHeader} style={{ opacity: headerOpacity }}>
           <p className={styles.eyebrow}>Community</p>
           <h2 className={styles.title}>What Builders Say</h2>
-          <p className={styles.subtitle}>
-            Real feedback from the COREX community
-          </p>
+          <p className={styles.subtitle}>Real feedback from the COREX community</p>
         </div>
 
         {/* Scroll indicator */}
-        <div
-          className={styles.scrollIndicator}
-          style={{ opacity: indicatorOpacity }}
-        >
+        <div className={styles.scrollIndicator} style={{ opacity: indicatorOpacity }}>
           <span>Scroll to explore</span>
           <div className={styles.scrollArrow}>&#8595;</div>
         </div>
 
-        {/* Network mesh background (Phase 5+) */}
-        <div className={styles.networkBg} style={{ opacity: networkOpacity }}>
-          <svg
-            className={styles.networkSvg}
-            viewBox="0 0 1200 800"
-            preserveAspectRatio="xMidYMid slice"
-          >
-            {networkSvgContent}
-          </svg>
+        {/* Full-screen web mesh — flat grid curved by CSS perspective */}
+        <div className={styles.webBg} style={{ opacity: webOpacity }}>
+          <div className={styles.webInner}>
+            <svg
+              className={styles.webSvg}
+              viewBox="0 0 1400 1000"
+              preserveAspectRatio="xMidYMid slice"
+            >
+              {webMeshContent}
+            </svg>
+          </div>
         </div>
 
         {/* Review cards */}
         <div className={styles.cardsLayer}>
-          {reviews.map((review, index) => (
-            <div
-              key={review.id}
-              className={`${styles.cardWrapper} ${shouldFloat ? styles.floating : ""}`}
-              style={
-                {
-                  ...getCardTransform(index),
-                  "--float-delay": `${index * -1.5}s`,
-                  "--float-x": `${(index % 2 === 0 ? 1 : -1) * (3 + index)}px`,
-                  "--float-y": `${(index % 2 === 0 ? -1 : 1) * (4 + index * 2)}px`,
-                } as React.CSSProperties
-              }
-            >
-              <ReviewCard
-                avatarColor={review.avatarColor}
-                initials={review.initials}
-                username={review.username}
-                handle={review.handle}
-                image={review.image}
-                likes={review.likes}
-                text={review.text}
-                date={review.date}
-              />
-            </div>
-          ))}
+          {reviews.map((review, index) => {
+            const target = getCardTarget(index);
+            const spring = getCardSpring(index);
+            return (
+              <motion.div
+                key={review.id}
+                className={`${styles.cardWrapper} ${shouldFloat ? styles.floating : ""}`}
+                animate={{
+                  x: target.x,
+                  y: target.y,
+                  opacity: target.opacity,
+                  scale: target.scale,
+                }}
+                transition={spring}
+                style={
+                  {
+                    "--float-delay": `${index * -1.5}s`,
+                    "--float-x": `${(index % 2 === 0 ? 1 : -1) * (3 + index)}px`,
+                    "--float-y": `${(index % 2 === 0 ? -1 : 1) * (4 + index * 2)}px`,
+                  } as React.CSSProperties
+                }
+              >
+                <ReviewCard
+                  avatarColor={review.avatarColor}
+                  initials={review.initials}
+                  username={review.username}
+                  handle={review.handle}
+                  image={review.image}
+                  likes={review.likes}
+                  text={review.text}
+                  date={review.date}
+                />
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Scrolling text rows (starts at progress ~0.50) */}
-        <div
-          className={`${styles.scrollingTextLayer} ${scrollTextOpacity === 0 ? styles.scrollingPaused : ""}`}
-          style={{ opacity: scrollTextOpacity }}
-        >
-          {ROW_CONFIGS.map((row, rowIndex) => (
-            <div
-              key={rowIndex}
-              className={styles.scrollingRow}
+        {/* Scrolling comments — each isolated, right to left */}
+        <div className={styles.commentsLayer} style={{ opacity: commentsOpacity }}>
+          {SCROLL_COMMENTS.map((c, i) => (
+            <span
+              key={i}
+              className={styles.scrollComment}
               style={
                 {
-                  top: `${row.top}%`,
-                  "--scroll-duration": `${row.speed}s`,
-                  "--row-opacity": row.opacity,
-                  fontSize: `${row.size}px`,
+                  top: `${c.y}%`,
+                  fontSize: `${c.size}px`,
+                  opacity: c.op,
+                  "--scroll-speed": `${c.speed}s`,
+                  "--scroll-delay": `${c.delay}s`,
                 } as React.CSSProperties
               }
             >
-              <div
-                className={`${styles.scrollingContent} ${row.reverse ? styles.scrollReverse : ""}`}
-              >
-                {DOUBLED_PHRASES[rowIndex].map((phrase, i) => (
-                  <span key={i} className={styles.scrollingPhrase}>
-                    {phrase}
-                  </span>
-                ))}
-              </div>
-            </div>
+              {c.text}
+            </span>
           ))}
         </div>
 
