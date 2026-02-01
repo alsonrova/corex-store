@@ -18,6 +18,8 @@
   background: radial-gradient(circle, rgba(92, 255, 177, 0.12), transparent 65%);
   filter: blur(80px);
   animation: pulse1 8s ease-in-out infinite;
+  will-change: transform, opacity;
+  contain: layout style paint;
 }
 
 .halo2 {
@@ -30,6 +32,8 @@
   background: radial-gradient(circle, rgba(92, 255, 177, 0.1), transparent 65%);
   filter: blur(70px);
   animation: pulse2 10s ease-in-out infinite;
+  will-change: transform, opacity;
+  contain: layout style paint;
 }
 
 .halo3 {
@@ -42,6 +46,8 @@
   background: radial-gradient(circle, rgba(92, 255, 177, 0.08), transparent 65%);
   filter: blur(60px);
   animation: pulse3 12s ease-in-out infinite;
+  will-change: transform, opacity;
+  contain: layout style paint;
 }
 
 .halo4 {
@@ -54,6 +60,8 @@
   background: radial-gradient(circle, rgba(92, 255, 177, 0.06), transparent 65%);
   filter: blur(50px);
   animation: pulse4 14s ease-in-out infinite;
+  will-change: transform, opacity;
+  contain: layout style paint;
 }
 
 @keyframes pulse1 {

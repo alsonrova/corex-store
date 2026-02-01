@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./AboutSection.module.css";
 
 const initLines = [
@@ -112,23 +112,20 @@ export default function AboutSection() {
 
   // Auto-shake every 10s when not hovering, every 1.5s when hovering
   useEffect(() => {
-    const interval = setInterval(() => {
-      const timeSinceLastShake = Date.now() - lastShakeRef.current;
-      
-      if (isHovering) {
-        // Shake every 1.5s while hovering
-        if (timeSinceLastShake >= 1500) {
-          triggerShake();
-        }
-      } else {
-        // Shake every 10s when not hovering
-        if (timeSinceLastShake >= 10000) {
-          triggerShake();
-        }
-      }
-    }, 100); // Check frequently
+    const scheduleShake = () => {
+      const delay = isHovering ? 1500 : 10000;
+      const elapsed = Date.now() - lastShakeRef.current;
+      const remaining = Math.max(0, delay - elapsed);
 
-    return () => clearInterval(interval);
+      return setTimeout(() => {
+        triggerShake();
+        timerRef = scheduleShake();
+      }, remaining);
+    };
+
+    let timerRef = scheduleShake();
+
+    return () => clearTimeout(timerRef);
   }, [isHovering, isShaking]);
 
   // Headline typing animation

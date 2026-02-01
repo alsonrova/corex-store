@@ -1,22 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import styles from "./CursorGlow.module.css";
 
 export default function CursorGlow() {
-  const [position, setPosition] = useState({ x: -200, y: -200 });
-  const [visible, setVisible] = useState(false);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const visibleRef = useRef(false);
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const el = glowRef.current;
+    if (!el) return;
+    el.style.transform = `translate(${e.clientX - 150}px, ${e.clientY - 150}px)`;
+    if (!visibleRef.current) {
+      visibleRef.current = true;
+      el.classList.add(styles.visible);
+    }
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    const el = glowRef.current;
+    if (!el) return;
+    visibleRef.current = false;
+    el.classList.remove(styles.visible);
+  }, []);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      if (!visible) setVisible(true);
-    };
-
-    const handleMouseLeave = () => {
-      setVisible(false);
-    };
-
     window.addEventListener("mousemove", handleMouseMove);
     document.body.addEventListener("mouseleave", handleMouseLeave);
 
@@ -24,16 +32,7 @@ export default function CursorGlow() {
       window.removeEventListener("mousemove", handleMouseMove);
       document.body.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [visible]);
+  }, [handleMouseMove, handleMouseLeave]);
 
-  return (
-    <div
-      className={`${styles.glow} ${visible ? styles.visible : ""}`}
-      style={{
-        left: position.x,
-        top: position.y,
-      }}
-    />
-  );
+  return <div ref={glowRef} className={styles.glow} />;
 }
-

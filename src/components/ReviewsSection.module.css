@@ -445,7 +445,8 @@
     0 0 90px rgba(92, 255, 177, 0.5),
     0 0 40px rgba(92, 255, 177, 0.3),
     0 0 80px rgba(92, 255, 177, 0.15);
-  animation: ctaNeonPulse 4s ease-in-out infinite alternate;
+  animation: ctaNeonPulse 4s ease-in-out 3 alternate forwards;
+  will-change: text-shadow;
   transition:
     filter 1.2s cubic-bezier(0.16, 1, 0.3, 1),
     transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);

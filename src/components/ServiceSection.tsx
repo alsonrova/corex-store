@@ -46,14 +46,17 @@ export default function ServiceSection() {
   // Simulate temperature based on animation phase
   useEffect(() => {
     const baseTemp = 32;
-    const targetTemp = animationPhase === 0 ? baseTemp : 
-                       animationPhase === 1 ? 38 : 
+    const targetTemp = animationPhase === 0 ? baseTemp :
+                       animationPhase === 1 ? 38 :
                        animationPhase === 2 ? 45 : 52;
-    
+
     // Smooth temperature transition
     const tempInterval = setInterval(() => {
       setTemperature(prev => {
-        if (Math.abs(prev - targetTemp) < 0.5) return targetTemp;
+        if (Math.abs(prev - targetTemp) < 0.5) {
+          clearInterval(tempInterval);
+          return targetTemp;
+        }
         return prev + (targetTemp > prev ? 0.8 : -0.8);
       });
     }, 100);
