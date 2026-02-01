@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Special_Elite, Bebas_Neue } from "next/font/google";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CursorGlow from "../components/CursorGlow";
 import Navbar from "../components/Navbar";
@@ -16,6 +16,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const specialElite = Special_Elite({
+  variable: "--font-typewriter",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-display",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "COREX Store | Futuristic PC Components",
   description:
@@ -29,7 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${specialElite.variable} ${bebasNeue.variable}`}>
         <AnimatedBackground />
         <CursorGlow />
         <Navbar />

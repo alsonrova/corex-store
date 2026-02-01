@@ -1,16 +1,94 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import ReviewCard from "./ReviewCard";
 import styles from "./ReviewsSection.module.css";
+
+// ── Decrypt text effect (rAF-based, fixed duration) ──
+
+const GLITCH_CHARS = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`01";
+
+function DecryptText({
+  text,
+  active,
+  delay = 0,
+  duration = 650,
+  className,
+}: {
+  text: string;
+  active: boolean;
+  delay?: number;
+  duration?: number;
+  className?: string;
+}) {
+  const [display, setDisplay] = useState("");
+  const started = useRef(false);
+  const rafRef = useRef<number | null>(null);
+  const delayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const run = useCallback(() => {
+    const chars = text.split("");
+    const total = chars.length;
+    const startTime = performance.now();
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Characters lock left-to-right based on time progress
+      const locked = Math.floor(progress * total);
+
+      let result = "";
+      for (let i = 0; i < total; i++) {
+        if (i < locked) {
+          result += chars[i];
+        } else if (chars[i] === " ") {
+          result += " ";
+        } else {
+          result += GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+        }
+      }
+      setDisplay(result);
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        setDisplay(text);
+      }
+    };
+
+    // Start with all scrambled
+    let scrambled = "";
+    for (let i = 0; i < total; i++) {
+      scrambled += chars[i] === " " ? " " : GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+    }
+    setDisplay(scrambled);
+    rafRef.current = requestAnimationFrame(tick);
+  }, [text, duration]);
+
+  useEffect(() => {
+    if (active && !started.current) {
+      started.current = true;
+      delayRef.current = setTimeout(run, delay);
+    }
+  }, [active, delay, run]);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (delayRef.current) clearTimeout(delayRef.current);
+    };
+  }, []);
+
+  if (!display) return <span className={className}>{"\u00A0"}</span>;
+  return <span className={className}>{display}</span>;
+}
 
 // ── Data ──
 
 interface Review {
   id: string;
-  avatarColor: string;
-  initials: string;
+  avatar: string;
   username: string;
   handle: string;
   image: string;
@@ -22,83 +100,65 @@ interface Review {
 const reviews: Review[] = [
   {
     id: "r1",
-    avatarColor: "#5cffb1",
-    initials: "AK",
+    avatar: "https://i.pravatar.cc/80?img=12",
     username: "alex.k",
     handle: "@alexkbuilds",
-    image: "/vecteezy_modern-gaming-pc-isolated-on-transparent_48412735.png",
+    image: "/ChatGPT Image 31 janv. 2026, 12_31_52.png",
     likes: 2847,
     text: "The build quality is insane. Every cable was routed perfectly, zero compromise on aesthetics. This is art.",
     date: "2d",
   },
   {
     id: "r2",
-    avatarColor: "#4d9fff",
-    initials: "SM",
+    avatar: "https://i.pravatar.cc/80?img=5",
     username: "sarah.m",
     handle: "@sarahsetups",
-    image: "/vecteezy_modern-gaming-pc-isolated-on-transparent_48412770.png",
+    image: "/ChatGPT Image 31 janv. 2026, 12_31_58.png",
     likes: 1523,
     text: "Ordered a custom config. Arrived in 3 days, runs flawlessly. COREX doesn't play around.",
     date: "5d",
   },
   {
     id: "r3",
-    avatarColor: "#ff6b9d",
-    initials: "DJ",
+    avatar: "https://i.pravatar.cc/80?img=53",
     username: "david.j",
     handle: "@djtech_",
-    image: "/corex_inside.png",
+    image: "/ChatGPT Image 31 janv. 2026, 12_32_04.png",
     likes: 4210,
     text: "Look at those internals. Best customer service I've experienced — they answered every single question I had before and after purchase.",
     date: "1w",
   },
   {
     id: "r4",
-    avatarColor: "#ffd93d",
-    initials: "EL",
+    avatar: "https://i.pravatar.cc/80?img=9",
     username: "emma.l",
     handle: "@emmabuilds",
-    image: "/vecteezy_modern-gaming-pc-isolated-on-transparent_48412788.png",
+    image: "/ChatGPT Image 31 janv. 2026, 12_32_09.png",
     likes: 987,
     text: "My setup looks incredible. Friends keep asking where I got it. Silent and powerful.",
     date: "1w",
   },
   {
     id: "r5",
-    avatarColor: "#a78bfa",
-    initials: "MP",
+    avatar: "https://i.pravatar.cc/80?img=68",
     username: "marcus.p",
     handle: "@marcusp.gg",
-    image: "/client_and_customer.png",
+    image: "/ChatGPT Image 31 janv. 2026, 12_32_13.png",
     likes: 3156,
     text: "Silent, powerful, beautiful. COREX nailed it. This is what premium looks like.",
     date: "2w",
   },
 ];
 
-// Scrolling comments — each one isolated on its own row, staggered delays
+// Scrolling comments — fewer, well-spaced, realistic reviews
 const SCROLL_COMMENTS = [
-  { text: "Absolutely stunning build quality \u{1F525}", y: 4, speed: 22, size: 17, op: 0.6, delay: 0 },
-  { text: "INSANE performance", y: 12, speed: 26, size: 21, op: 0.75, delay: 4 },
-  { text: "this thing is silent???", y: 20, speed: 18, size: 12, op: 0.3, delay: 9 },
-  { text: "FIRE \u{1F525}\u{1F525}\u{1F525}", y: 28, speed: 16, size: 24, op: 0.85, delay: 1 },
-  { text: "livraison rapide", y: 35, speed: 24, size: 11, op: 0.25, delay: 11 },
-  { text: "worth it", y: 42, speed: 15, size: 14, op: 0.4, delay: 6 },
-  { text: "ZERO noise. ZERO.", y: 49, speed: 20, size: 19, op: 0.6, delay: 3 },
-  { text: "clean af", y: 55, speed: 14, size: 15, op: 0.4, delay: 8 },
-  { text: "BEAST MODE", y: 62, speed: 21, size: 26, op: 0.85, delay: 2 },
-  { text: "meilleur achat de l'ann\u00e9e", y: 68, speed: 23, size: 13, op: 0.3, delay: 10 },
-  { text: "built different fr", y: 74, speed: 17, size: 16, op: 0.5, delay: 5 },
-  { text: "S-tier build", y: 80, speed: 20, size: 20, op: 0.7, delay: 7 },
-  { text: "ELITE", y: 86, speed: 15, size: 28, op: 0.9, delay: 3 },
-  { text: "aesthetic perfection", y: 92, speed: 22, size: 18, op: 0.55, delay: 9 },
-  { text: "10/10 would buy again", y: 8, speed: 25, size: 15, op: 0.45, delay: 13 },
-  { text: "GODLIKE cooling", y: 38, speed: 19, size: 13, op: 0.3, delay: 15 },
-  { text: "premium", y: 58, speed: 16, size: 19, op: 0.5, delay: 12 },
-  { text: "magnifique", y: 46, speed: 21, size: 12, op: 0.25, delay: 14 },
-  { text: "ok i'm obsessed", y: 17, speed: 18, size: 15, op: 0.4, delay: 7 },
-  { text: "cable management is next level", y: 76, speed: 24, size: 10, op: 0.2, delay: 16 },
+  { text: "Honestly I was skeptical at first but this PC completely blew my expectations, the airflow alone is worth the price", y: 6, speed: 34, size: 14, op: 0.35, delay: 0 },
+  { text: "Ran Cyberpunk on ultra settings, 4K, ray tracing maxed out and this beast didn't even break a sweat", y: 20, speed: 30, size: 13, op: 0.3, delay: 8 },
+  { text: "J'ai re\u00e7u ma commande en 3 jours, tout \u00e9tait emball\u00e9 avec soin et le cable management est impeccable", y: 36, speed: 38, size: 12, op: 0.25, delay: 3 },
+  { text: "I've built PCs for 15 years and I can tell you the thermal design here is top-tier engineering", y: 52, speed: 32, size: 14, op: 0.3, delay: 12 },
+  { text: "The RGB integration is so clean it looks like the whole case is breathing, nothing like cheap rainbow builds", y: 66, speed: 36, size: 13, op: 0.25, delay: 6 },
+  { text: "Silent even during stress tests, I had to check twice that it was actually on because I couldn't hear a thing", y: 80, speed: 30, size: 14, op: 0.35, delay: 15 },
+  { text: "Every single detail is thought through, from the custom backplate to the sleeved cables, this is premium", y: 93, speed: 34, size: 12, op: 0.2, delay: 10 },
 ];
 
 // Phase 4 scattered card positions (vw, vh)
@@ -124,7 +184,9 @@ export default function ReviewsSection() {
   const [isActive, setIsActive] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [windowSize, setWindowSize] = useState({ w: 0, h: 0 });
+  const [showCta, setShowCta] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const ctaTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Window size tracking
   useEffect(() => {
@@ -180,6 +242,23 @@ export default function ReviewsSection() {
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, []);
+
+  // ── CTA title: fire-once, 3s after comments first appear ──
+  const commentsStarted = scrollProgress >= 0.62;
+  const ctaFired = useRef(false);
+
+  useEffect(() => {
+    if (commentsStarted && !ctaFired.current) {
+      ctaFired.current = true;
+      ctaTimerRef.current = setTimeout(() => setShowCta(true), 3000);
+    }
+    return () => {
+      if (ctaTimerRef.current) {
+        clearTimeout(ctaTimerRef.current);
+        ctaTimerRef.current = null;
+      }
+    };
+  }, [commentsStarted]);
 
   // ── Derived values ──
 
@@ -335,7 +414,7 @@ export default function ReviewsSection() {
           <div className={styles.webInner}>
             <svg
               className={styles.webSvg}
-              viewBox="0 0 1400 1000"
+               viewBox="0 0 1400 1000"
               preserveAspectRatio="xMidYMid slice"
             >
               {webMeshContent}
@@ -368,14 +447,15 @@ export default function ReviewsSection() {
                 }
               >
                 <ReviewCard
-                  avatarColor={review.avatarColor}
-                  initials={review.initials}
+                  avatar={review.avatar}
                   username={review.username}
                   handle={review.handle}
                   image={review.image}
                   likes={review.likes}
                   text={review.text}
                   date={review.date}
+                  animate={scrollProgress >= (index === 0 ? 0.15 : CARD_ENTRY_THRESHOLDS[index] + 0.06)}
+                  liveIncrement={scrollProgress >= 0.85}
                 />
               </motion.div>
             );
@@ -401,6 +481,27 @@ export default function ReviewsSection() {
               {c.text}
             </span>
           ))}
+        </div>
+
+        {/* CTA title — decrypt + glitch entrance */}
+        <div
+          className={`${styles.ctaTitle} ${showCta ? styles.ctaVisible : ""} ${showCta ? styles.ctaGlitching : ""}`}
+          style={{ opacity: showCta ? commentsOpacity : 0, transition: "opacity 0.5s ease" }}
+        >
+          <DecryptText
+            text="Built to impress."
+            active={showCta}
+            delay={0}
+            duration={850}
+            className={styles.ctaGlow}
+          />
+          <DecryptText
+            text="Crafted for those who refuse ordinary."
+            active={showCta}
+            delay={300}
+            duration={750}
+            className={styles.ctaSub}
+          />
         </div>
 
         {/* Progress bar */}

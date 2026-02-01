@@ -193,17 +193,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
   flex-shrink: 0;
-}
-
-.avatarInitials {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--bg);
-  letter-spacing: -0.02em;
+  border: 1.5px solid var(--border);
 }
 
 .userInfo {
@@ -268,6 +260,52 @@
   color: #ff4d6a;
   font-size: 16px;
   line-height: 1;
+  display: inline-block;
+}
+
+/* Heart single bump — on live increment */
+.heartBump {
+  animation: heartBump 0.35s ease-out;
+}
+
+@keyframes heartBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.5); color: #ff1a4a; }
+  100% { transform: scale(1); }
+}
+
+/* ── Odometer digit counter ── */
+.likesAnimated {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.digitRoller {
+  display: inline-block;
+  height: 1.15em;
+  overflow: hidden;
+  vertical-align: bottom;
+  contain: layout style;
+}
+
+.digitColumn {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  will-change: transform;
+}
+
+.digitColumn span {
+  display: block;
+  height: 1.15em;
+  text-align: center;
+}
+
+.likesLabel {
+  margin-left: 3px;
 }
 
 .likes {
@@ -336,11 +374,14 @@
   position: absolute;
   left: 0;
   white-space: nowrap;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-family: var(--font-typewriter), "Courier New", monospace;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   color: var(--text-secondary);
+  transform: translateX(100vw);
   animation: scrollComment var(--scroll-speed, 20s) linear infinite;
   animation-delay: var(--scroll-delay, 0s);
+  animation-fill-mode: backwards;
 }
 
 @keyframes scrollComment {
@@ -349,6 +390,146 @@
   }
   100% {
     transform: translateX(calc(-100% - 100px));
+  }
+}
+
+/* ── CTA title — steampunk neon entrance ── */
+.ctaTitle {
+  position: absolute;
+  top: 14vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ctaGlow {
+  display: block;
+  font-family: var(--font-display), "Arial Narrow", sans-serif;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5cffb1;
+  white-space: nowrap;
+  filter: blur(14px);
+  transform: scale(0.88) translateY(18px);
+  transition: none;
+}
+
+.ctaSub {
+  display: block;
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+  font-size: clamp(11px, 1.3vw, 15px);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+  white-space: nowrap;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: none;
+}
+
+/* Active state — staggered entrance */
+.ctaTitle.ctaVisible .ctaGlow {
+  filter: blur(0px);
+  transform: scale(1) translateY(0);
+  text-shadow:
+    0 0 15px rgba(92, 255, 177, 0.8),
+    0 0 90px rgba(92, 255, 177, 0.5),
+    0 0 40px rgba(92, 255, 177, 0.3),
+    0 0 80px rgba(92, 255, 177, 0.15);
+  animation: ctaNeonPulse 4s ease-in-out infinite alternate;
+  transition:
+    filter 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ctaTitle.ctaVisible .ctaSub {
+  opacity: 1;
+  transform: translateY(0);
+  text-shadow:
+    0 0 9px rgba(92, 255, 177, 0.9),
+    0 0 20px rgba(92, 255, 177, 0.35),
+    0 0 60px rgba(92, 255, 177, 0.18),
+    0 0 60px rgba(92, 255, 177, 0.08);
+  transition:
+    opacity 0.35s ease 0.25s,
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+}
+
+@keyframes ctaNeonPulse {
+  0% {
+    text-shadow:
+      0 0 4px rgba(92, 255, 177, 0.8),
+      0 0 14px rgba(92, 255, 177, 0.5),
+      0 0 40px rgba(92, 255, 177, 0.3),
+      0 0 80px rgba(92, 255, 177, 0.15);
+  }
+  100% {
+    text-shadow:
+      0 0 6px rgba(92, 255, 177, 0.9),
+      0 0 20px rgba(92, 255, 177, 0.6),
+      0 0 55px rgba(92, 255, 177, 0.35),
+      0 0 100px rgba(92, 255, 177, 0.18);
+  }
+}
+
+/* ── CTA pixel-break entrance — clip-path slices + skew burst ── */
+.ctaGlitching {
+  animation: ctaPixelBreak 0.7s steps(1, end) 1;
+}
+
+@keyframes ctaPixelBreak {
+  0% {
+    transform: translateX(-50%) skewX(-6deg) scaleX(0.9);
+    clip-path: inset(0 0 0 0);
+    filter: blur(3px);
+  }
+  6% {
+    transform: translateX(calc(-50% + 8px)) skewX(4deg) scaleX(1.08);
+    clip-path: inset(25% 0 55% 0);
+    filter: blur(0);
+  }
+  12% {
+    transform: translateX(calc(-50% - 6px)) skewX(-3deg) scaleX(0.96);
+    clip-path: inset(60% 0 15% 0);
+  }
+  18% {
+    transform: translateX(calc(-50% + 4px)) skewX(2.5deg) scaleX(1.04);
+    clip-path: inset(10% 0 70% 0);
+  }
+  24% {
+    transform: translateX(-50%) skewX(-1.5deg);
+    clip-path: inset(0 0 0 0);
+  }
+  32% {
+    transform: translateX(calc(-50% + 3px)) skewX(1deg) scaleX(1.02);
+    clip-path: inset(40% 0 40% 0);
+  }
+  38% {
+    transform: translateX(calc(-50% - 2px)) skewX(-0.5deg);
+    clip-path: inset(0 0 0 0);
+  }
+  48% {
+    transform: translateX(-50%) skewX(0.3deg) scaleX(1.01);
+    clip-path: inset(0 0 0 0);
+  }
+  60% {
+    transform: translateX(-50%) skewX(0deg) scaleX(1);
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+  100% {
+    transform: translateX(-50%) skewX(0deg) scaleX(1);
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
   }
 }
 
