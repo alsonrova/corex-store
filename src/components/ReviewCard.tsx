@@ -18,7 +18,7 @@ interface ReviewCardProps {
 
 // 0-9 + duplicate 0 for smooth 9→0 wrapping
 const DIGIT_STRIP = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-const DIGIT_H = 1.15; // em — matches CSS line-height
+const DIGIT_H = 1; // em — matches CSS line-height
 
 function formatLikes(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;

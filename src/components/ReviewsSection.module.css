@@ -277,35 +277,39 @@
 /* ── Odometer digit counter ── */
 .likesAnimated {
   display: inline-flex;
-  align-items: baseline;
+  align-items: flex-end;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1;
   color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
 }
 
 .digitRoller {
   display: inline-block;
-  height: 1.15em;
+  width: 0.62em;
+  height: 1em;
   overflow: hidden;
-  vertical-align: bottom;
+  text-align: center;
   contain: layout style;
 }
 
 .digitColumn {
   display: flex;
   flex-direction: column;
-  line-height: 1.15;
+  line-height: 1;
   will-change: transform;
 }
 
 .digitColumn span {
   display: block;
-  height: 1.15em;
+  height: 1em;
   text-align: center;
 }
 
 .likesLabel {
   margin-left: 3px;
+  line-height: 1;
 }
 
 .likes {

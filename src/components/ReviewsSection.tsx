@@ -153,12 +153,12 @@ const reviews: Review[] = [
 // Scrolling comments — fewer, well-spaced, realistic reviews
 const SCROLL_COMMENTS = [
   { text: "Honestly I was skeptical at first but this PC completely blew my expectations, the airflow alone is worth the price", y: 6, speed: 34, size: 14, op: 0.35, delay: 0 },
-  { text: "Ran Cyberpunk on ultra settings, 4K, ray tracing maxed out and this beast didn't even break a sweat", y: 20, speed: 30, size: 13, op: 0.3, delay: 8 },
-  { text: "J'ai re\u00e7u ma commande en 3 jours, tout \u00e9tait emball\u00e9 avec soin et le cable management est impeccable", y: 36, speed: 38, size: 12, op: 0.25, delay: 3 },
-  { text: "I've built PCs for 15 years and I can tell you the thermal design here is top-tier engineering", y: 52, speed: 32, size: 14, op: 0.3, delay: 12 },
-  { text: "The RGB integration is so clean it looks like the whole case is breathing, nothing like cheap rainbow builds", y: 66, speed: 36, size: 13, op: 0.25, delay: 6 },
-  { text: "Silent even during stress tests, I had to check twice that it was actually on because I couldn't hear a thing", y: 80, speed: 30, size: 14, op: 0.35, delay: 15 },
-  { text: "Every single detail is thought through, from the custom backplate to the sleeved cables, this is premium", y: 93, speed: 34, size: 12, op: 0.2, delay: 10 },
+  { text: "Ran Cyberpunk on ultra settings, 4K, ray tracing maxed out and this beast didn't even break a sweat", y: 20, speed: 30, size: 13, op: 0.3, delay: -4 },
+  { text: "J'ai re\u00e7u ma commande en 3 jours, tout \u00e9tait emball\u00e9 avec soin et le cable management est impeccable", y: 36, speed: 38, size: 12, op: 0.25, delay: -11 },
+  { text: "I've built PCs for 15 years and I can tell you the thermal design here is top-tier engineering", y: 52, speed: 32, size: 14, op: 0.3, delay: -14 },
+  { text: "The RGB integration is so clean it looks like the whole case is breathing, nothing like cheap rainbow builds", y: 66, speed: 36, size: 13, op: 0.25, delay: -20 },
+  { text: "Silent even during stress tests, I had to check twice that it was actually on because I couldn't hear a thing", y: 80, speed: 30, size: 14, op: 0.35, delay: -22 },
+  { text: "Every single detail is thought through, from the custom backplate to the sleeved cables, this is premium", y: 93, speed: 34, size: 12, op: 0.2, delay: -29 },
 ];
 
 // Phase 4 scattered card positions (vw, vh)
@@ -346,47 +346,39 @@ export default function ReviewsSection() {
 
   // ── Web mesh SVG (memoized — full-screen grid) ──
 
-  const webMeshContent = useMemo(() => {
+  const webMesh = useMemo(() => {
     const w = 1400;
     const h = 1000;
     const cols = 18;
     const rows = 13;
     const colSpacing = w / cols;
     const rowSpacing = h / rows;
-    const lineColor = "rgba(92, 255, 177, 0.07)";
-    const nodeColor = "rgba(92, 255, 177, 0.14)";
+    const lineColor = "rgba(92, 255, 177, 0.25)";
+    const nodeColor = "rgba(92, 255, 177, 0.40)";
 
-    const elements: React.ReactElement[] = [];
+    const base: React.ReactElement[] = [];
+    const mask: React.ReactElement[] = [];
 
     for (let i = 0; i <= rows; i++) {
       const y = i * rowSpacing;
-      elements.push(
-        <line key={`h${i}`} x1={0} y1={y} x2={w} y2={y} stroke={lineColor} strokeWidth={0.8} />
-      );
+      base.push(<line key={`h${i}`} x1={0} y1={y} x2={w} y2={y} stroke={lineColor} strokeWidth={0.8} />);
+      mask.push(<line key={`mh${i}`} x1={0} y1={y} x2={w} y2={y} stroke="white" strokeWidth={3} />);
     }
 
     for (let i = 0; i <= cols; i++) {
       const x = i * colSpacing;
-      elements.push(
-        <line key={`v${i}`} x1={x} y1={0} x2={x} y2={h} stroke={lineColor} strokeWidth={0.8} />
-      );
+      base.push(<line key={`v${i}`} x1={x} y1={0} x2={x} y2={h} stroke={lineColor} strokeWidth={0.8} />);
+      mask.push(<line key={`mv${i}`} x1={x} y1={0} x2={x} y2={h} stroke="white" strokeWidth={3} />);
     }
 
     for (let iy = 0; iy <= rows; iy += 2) {
       for (let ix = 0; ix <= cols; ix += 2) {
-        elements.push(
-          <circle
-            key={`n${ix}-${iy}`}
-            cx={ix * colSpacing}
-            cy={iy * rowSpacing}
-            r={1.5}
-            fill={nodeColor}
-          />
-        );
+        base.push(<circle key={`n${ix}-${iy}`} cx={ix * colSpacing} cy={iy * rowSpacing} r={1.5} fill={nodeColor} />);
+        mask.push(<circle key={`mn${ix}-${iy}`} cx={ix * colSpacing} cy={iy * rowSpacing} r={4} fill="white" />);
       }
     }
 
-    return <g>{elements}</g>;
+    return { base: <g>{base}</g>, mask: <g>{mask}</g> };
   }, []);
 
   // ── Render ──
@@ -414,10 +406,43 @@ export default function ReviewsSection() {
           <div className={styles.webInner}>
             <svg
               className={styles.webSvg}
-               viewBox="0 0 1400 1000"
+              viewBox="0 0 1400 1000"
               preserveAspectRatio="xMidYMid slice"
             >
-              {webMeshContent}
+              <defs>
+                <filter id="glowBlur">
+                  <feGaussianBlur stdDeviation="3" />
+                </filter>
+                <mask id="meshMask">
+                  <rect width="1400" height="1000" fill="black" />
+                  <g filter="url(#glowBlur)">{webMesh.mask}</g>
+                </mask>
+                <linearGradient id="sweepGrad">
+                  <stop offset="0%" stopColor="rgba(92,255,177,0)" />
+                  <stop offset="42%" stopColor="rgba(92,255,177,0)" />
+                  <stop offset="47%" stopColor="rgba(92,255,177,0.3)" />
+                  <stop offset="49%" stopColor="rgba(92,255,177,1)" />
+                  <stop offset="51%" stopColor="rgba(92,255,177,1)" />
+                  <stop offset="53%" stopColor="rgba(92,255,177,0.3)" />
+                  <stop offset="58%" stopColor="rgba(92,255,177,0)" />
+                  <stop offset="100%" stopColor="rgba(92,255,177,0)" />
+                </linearGradient>
+              </defs>
+              {webMesh.base}
+              <rect
+                x="0" y="0" width="100" height="1000"
+                fill="url(#sweepGrad)"
+                mask="url(#meshMask)"
+              >
+                <animateTransform
+                  attributeName="transform"
+                  type="translate"
+                  from="-150 0"
+                  to="1500 0"
+                  dur="3s"
+                  repeatCount="indefinite"
+                />
+              </rect>
             </svg>
           </div>
         </div>
