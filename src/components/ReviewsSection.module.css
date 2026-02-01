@@ -56,6 +56,13 @@
   visibility: visible;
 }
 
+/* Soft bottom fade — applied during scatter phase so cards aren't hard-clipped */
+.fixedOverlay.fadeBottom {
+  overflow: visible;
+  mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+}
+
 /* ── Section header ── */
 .sectionHeader {
   position: absolute;

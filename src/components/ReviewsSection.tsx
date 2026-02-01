@@ -250,7 +250,7 @@ export default function ReviewsSection() {
   useEffect(() => {
     if (commentsStarted && !ctaFired.current) {
       ctaFired.current = true;
-      ctaTimerRef.current = setTimeout(() => setShowCta(true), 3000);
+      ctaTimerRef.current = setTimeout(() => setShowCta(true), 1500);
     }
     return () => {
       if (ctaTimerRef.current) {
@@ -270,10 +270,16 @@ export default function ReviewsSection() {
       ? 0
       : scrollProgress < 0.75
         ? ((scrollProgress - 0.62) / 0.13) * 0.4
-        : 0.4;
+        : scrollProgress < 0.90
+          ? 0.4
+          : 0.4 * Math.max(0, 1 - (scrollProgress - 0.90) / 0.10);
 
   const commentsOpacity =
-    scrollProgress < 0.62 ? 0 : Math.min((scrollProgress - 0.62) / 0.1, 1);
+    scrollProgress < 0.62
+      ? 0
+      : scrollProgress < 0.90
+        ? Math.min((scrollProgress - 0.62) / 0.1, 1)
+        : Math.max(0, 1 - (scrollProgress - 0.90) / 0.10);
 
   const headerOpacity = Math.max(0, 1 - scrollProgress * 3);
   const indicatorOpacity = Math.max(0, 1 - scrollProgress * 4);
@@ -386,7 +392,7 @@ export default function ReviewsSection() {
   return (
     <section className={styles.section} id="reviews" ref={sectionRef}>
       <div
-        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""}`}
+        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""} ${shouldFloat ? styles.fadeBottom : ""}`}
       >
         {/* Section header */}
         <div className={styles.sectionHeader} style={{ opacity: headerOpacity }}>
