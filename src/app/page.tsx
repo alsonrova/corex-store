@@ -1,4 +1,5 @@
 import AboutSection from "../components/AboutSection";
+import CTASection from "../components/CTASection";
 import DreamSetupSection from "../components/DreamSetupSection";
 import HeroShowcase from "../components/HeroShowcase";
 import ReviewsSection from "../components/ReviewsSection";
@@ -26,6 +27,8 @@ export default function Home() {
         <TeamSection />
 
         <ReviewsSection />
+
+        <CTASection />
 
       </main>
 

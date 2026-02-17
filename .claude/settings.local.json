@@ -7,7 +7,18 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" status)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" diff)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" log --oneline -5)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" add src/components/ReviewsSection.tsx src/components/ReviewsSection.module.css src/components/ReviewCard.tsx)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" commit -m \"$\\(cat <<''EOF''\nEnhance ReviewsSection: continuous scroll comments, SVG mesh glow sweep, fix odometer\n\n- Fix scroll comments bunching by using negative delays to distribute\n  comments evenly across animation cycle \\(no more empty gaps\\)\n- Replace overlay light sweep with native SVG mask + animated rect so\n  mesh lines themselves illuminate as the 2px sweep passes\n- Increase mesh line/node opacity for better visibility\n- Fix odometer digit alignment \\(line-height, tabular-nums, flex-end\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" push)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" diff --stat)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" log --oneline -3)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" add src/components/ReviewsSection.tsx src/components/ReviewsSection.module.css)",
+      "Bash(git -C \"D:\\\\Projet\\\\COREX\\\\corex-store\" commit -m \"$\\(cat <<''EOF''\nSmooth bottom transition and faster CTA in ReviewsSection\n\n- Replace hard overflow clip with CSS mask fade at bottom \\(80%-100%\\)\n  so card 5 and content dissolve smoothly instead of being cut off\n- Fade out web mesh and comments opacity in last 10% of scroll progress\n- Reduce CTA title delay from 3s to 1.5s after comments appear\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "WebSearch"
     ]
   }
 }

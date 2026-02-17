@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Special_Elite, Bebas_Neue } from "next/font/google";
+import localFont from "next/font/local";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CursorGlow from "../components/CursorGlow";
 import Navbar from "../components/Navbar";
@@ -28,6 +29,12 @@ const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
 });
 
+const playPretend = localFont({
+  src: "../fonts/PlayPretend.otf",
+  variable: "--font-play-pretend",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "COREX Store | Futuristic PC Components",
   description:
@@ -41,7 +48,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} ${specialElite.variable} ${bebasNeue.variable}`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${specialElite.variable} ${bebasNeue.variable} ${playPretend.variable}`}>
         <AnimatedBackground />
         <CursorGlow />
         <Navbar />
