@@ -386,7 +386,7 @@ export default function ReviewsSection() {
   return (
     <section className={styles.section} id="reviews" ref={sectionRef}>
       <div
-        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""}`}
+        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""} ${isAtBottom ? styles.fadeBottom : ""}`}
       >
         {/* Section header */}
         <div className={styles.sectionHeader} style={{ opacity: headerOpacity }}>
