@@ -183,6 +183,7 @@ const HEX_SYMBOLS = [
 export default function CTASection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -206,6 +207,8 @@ export default function CTASection() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => { setMounted(true); }, []);
 
   // Tron grid (memoized)
   const tronGrid = useMemo(() => {
@@ -266,8 +269,6 @@ export default function CTASection() {
             </line>
           </svg>
         </div>
-        {/* Radial depth gradient */}
-        <div className={styles.radialDepth} />
       </motion.div>
 
       {/* ── Circuit background ── */}
@@ -320,24 +321,26 @@ export default function CTASection() {
         <div className={styles.scanlines} />
       </motion.div>
 
-      {/* ── Particles — upward-moving data ── */}
-      <div className={styles.particleLayer}>
-        {PARTICLES.map((p) => (
-          <div
-            key={p.id}
-            className={styles.particle}
-            style={{
-              "--px": `${p.x}%`,
-              "--py": `${p.y}%`,
-              "--psize": `${p.size}px`,
-              "--pop": p.opacity,
-              "--pspeed": `${p.speed}s`,
-              "--pblur": `${p.blur}px`,
-              "--pdelay": `${p.delay}s`,
-            } as React.CSSProperties}
-          />
-        ))}
-      </div>
+      {/* ── Particles — upward-moving data (client-only to avoid SSR mismatch) ── */}
+      {mounted && (
+        <div className={styles.particleLayer}>
+          {PARTICLES.map((p) => (
+            <div
+              key={p.id}
+              className={styles.particle}
+              style={{
+                "--px": `${p.x}%`,
+                "--py": `${p.y}%`,
+                "--psize": `${p.size}px`,
+                "--pop": `${p.opacity}`,
+                "--pspeed": `${p.speed}s`,
+                "--pblur": `${p.blur}px`,
+                "--pdelay": `${p.delay}s`,
+              } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      )}
 
       {/* ── Global horizontal scan line ── */}
       <div className={styles.globalScanLine} />

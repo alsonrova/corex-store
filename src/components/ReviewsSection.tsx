@@ -270,16 +270,10 @@ export default function ReviewsSection() {
       ? 0
       : scrollProgress < 0.75
         ? ((scrollProgress - 0.62) / 0.13) * 0.4
-        : scrollProgress < 0.90
-          ? 0.4
-          : 0.4 * Math.max(0, 1 - (scrollProgress - 0.90) / 0.10);
+        : 0.4;
 
   const commentsOpacity =
-    scrollProgress < 0.62
-      ? 0
-      : scrollProgress < 0.90
-        ? Math.min((scrollProgress - 0.62) / 0.1, 1)
-        : Math.max(0, 1 - (scrollProgress - 0.90) / 0.10);
+    scrollProgress < 0.62 ? 0 : Math.min((scrollProgress - 0.62) / 0.1, 1);
 
   const headerOpacity = Math.max(0, 1 - scrollProgress * 3);
   const indicatorOpacity = Math.max(0, 1 - scrollProgress * 4);
@@ -392,7 +386,7 @@ export default function ReviewsSection() {
   return (
     <section className={styles.section} id="reviews" ref={sectionRef}>
       <div
-        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""} ${shouldFloat ? styles.fadeBottom : ""}`}
+        className={`${styles.fixedOverlay} ${isActive ? styles.active : ""} ${isAtBottom ? styles.atBottom : ""}`}
       >
         {/* Section header */}
         <div className={styles.sectionHeader} style={{ opacity: headerOpacity }}>

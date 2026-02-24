@@ -36,18 +36,6 @@
   opacity: 0.6;
 }
 
-.radialDepth {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 50%,
-    transparent 0%,
-    rgba(4, 6, 10, 0.3) 45%,
-    rgba(4, 6, 10, 0.75) 70%,
-    rgba(4, 6, 10, 1) 100%
-  );
-  pointer-events: none;
-}
 
 /* ═══════════════════════════════════════════
    Circuit Background
@@ -259,10 +247,9 @@
   position: relative;
   width: min(920px, calc(100vw - 80px));
   padding: 60px 80px;
-  background: rgba(4, 6, 10, 0.5);
+  background: transparent;
   border: 1px solid rgba(92, 255, 177, 0.25);
   border-radius: 20px;
-  backdrop-filter: blur(12px);
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.6s ease, transform 0.6s ease;
@@ -442,8 +429,8 @@
 /* Frame corners */
 .frameCorner {
   position: absolute;
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   border-color: var(--accent);
   border-style: solid;
   border-width: 0;
@@ -752,7 +739,7 @@
     font-size: 15px;
   }
 
-  .frameCorner { width: 16px; height: 16px; }
+  .frameCorner { width: 24px; height: 24px; }
   .floatingOrb { display: none; }
   .codeFragment { display: none; }
   .hexSvg { display: none; }
