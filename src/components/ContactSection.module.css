@@ -1,0 +1,638 @@
+/* ═══════════════════════════════════════════
+   Section Shell
+   ═══════════════════════════════════════════ */
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 80px 24px;
+}
+
+/* ═══════════════════════════════════════════
+   Network Background
+   ═══════════════════════════════════════════ */
+
+.networkBg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.65;
+}
+
+.networkSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.nodePulseRing {
+  animation: nodePulse 3.5s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes nodePulse {
+  0%, 100% { opacity: 0.08; transform: scale(1); }
+  50%       { opacity: 0.28; transform: scale(1.35); }
+}
+
+.nodeLed {
+  animation: ledBlink 2.5s ease-in-out infinite;
+}
+
+@keyframes ledBlink {
+  0%, 80%, 100% { opacity: 1; }
+  85%            { opacity: 0.1; }
+}
+
+.nodeLabel {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+  font-size: 9px;
+  fill: rgba(92, 255, 177, 0.25);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* ── Floating data labels ── */
+
+.dataLabelText {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+  font-size: 9px;
+  fill: rgba(92, 255, 177, 0.92);
+  letter-spacing: 0.06em;
+  filter: drop-shadow(0 0 5px rgba(92, 255, 177, 0.7));
+  pointer-events: none;
+}
+
+.typingCursor {
+  animation: cursorBlink 0.75s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Each char during pixel explosion */
+.dataLabelChar {
+  font-family: var(--font-geist-mono), "Courier New", monospace;
+  font-size: 9px;
+  fill: rgba(92, 255, 177, 0.92);
+  letter-spacing: 0.06em;
+  pointer-events: none;
+  animation: pixelScatter 0.65s cubic-bezier(0.2, 0, 0.8, 1) forwards;
+}
+
+@keyframes pixelScatter {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+  35% {
+    filter: brightness(3) blur(0.5px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--sdx, 0), var(--sdy, 0));
+    opacity: 0;
+    filter: brightness(4) blur(3px);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Main Content Column
+   ═══════════════════════════════════════════ */
+
+.content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ═══════════════════════════════════════════
+   Section Header — Staggered glitch entrance
+   ═══════════════════════════════════════════ */
+
+.sectionHeader {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Children start hidden before .visible fires */
+.sectionHeader > * {
+  opacity: 0;
+}
+
+/* Glitch entrance — each child with offset delay */
+.sectionHeader.visible > :nth-child(1) {
+  animation: glitchIn 0.6s ease forwards 0s;
+}
+
+.sectionHeader.visible > :nth-child(2) {
+  /* glitchIn: entrance. headingShine: sweep once per 5s cycle, linear so no false "stops". */
+  animation:
+    glitchIn     0.65s ease    forwards 0.18s,
+    headingShine 5s    linear  infinite 0.83s;
+}
+
+.sectionHeader.visible > :nth-child(3) {
+  animation: glitchIn 0.5s ease forwards 0.35s;
+}
+
+@keyframes glitchIn {
+  0%   { opacity: 0;    transform: translateY(16px) translateX(0) skewX(0);         filter: none; }
+  12%  { opacity: 0.6;  transform: translateY(4px)  translateX(-10px) skewX(-3deg); filter: hue-rotate(90deg) brightness(1.35); }
+  24%  { opacity: 0.8;  transform: translateY(1px)  translateX(8px)  skewX(2deg);  filter: hue-rotate(-90deg) brightness(1.2); }
+  36%  { opacity: 0.9;  transform: translateY(0)    translateX(-5px) skewX(-1deg); filter: hue-rotate(45deg); }
+  52%  { opacity: 0.95; transform: translateY(0)    translateX(3px)  skewX(0.5deg); filter: hue-rotate(-30deg); }
+  68%  { opacity: 1;    transform: translateY(0)    translateX(-1px) skewX(-0.2deg); filter: none; }
+  84%  { opacity: 1;    transform: translateY(0)    translateX(0.5px) skewX(0); }
+  100% { opacity: 1;    transform: translateY(0)    translateX(0)    skewX(0);      filter: none; }
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-play-pretend), sans-serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  /*
+   * Glass shine: base is mint accent, a bright white streak sweeps through.
+   * --text-primary (#e9eef9) was too close to white to create visible contrast.
+   * Using var(--accent) as the resting color makes the white shine clearly visible.
+   */
+  background: linear-gradient(
+    105deg,
+    var(--text-primary)        0%,
+    var(--text-primary)        36%,
+    rgba(92, 255, 177, 0.7)    44%,
+    var(--accent)              50%,
+    rgba(92, 255, 177, 0.7)    56%,
+    var(--text-primary)        64%,
+    var(--text-primary)        100%
+  );
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* animation is applied by .sectionHeader.visible > :nth-child(2) after the entrance glitch */
+}
+
+@keyframes headingShine {
+  /*
+   * 0 → 70% (3.5s): shine is parked off-screen left — text is plain white.
+   * 70% → 100% (1.5s): single linear sweep from left to right across the text.
+   * At the loop boundary (100%→0%) the shine jumps back off-screen left — invisible reset.
+   */
+  0%,  70% { background-position: 100% center; }
+  100%     { background-position: 0%   center; }
+}
+
+.subheading {
+  margin: 0;
+  font-size: clamp(13px, 1.5vw, 15px);
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════
+   Glitch Frame (form window)
+   ═══════════════════════════════════════════ */
+
+.glitchFrame {
+  position: relative;
+  width: min(520px, calc(100vw - 48px));
+  padding: 48px 40px;
+  background: rgba(4, 6, 10, 0.72);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid rgba(92, 255, 177, 0.22);
+  border-radius: 20px;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  overflow: hidden;
+}
+
+.glitchFrame.active {
+  opacity: 1;
+  transform: scale(1);
+  animation:
+    contactFrameGlitch 0.15s ease-out,
+    contactFrameShake 4s ease-in-out 1s infinite;
+}
+
+/* Clip glitch strips — fires once on entrance, then periodically */
+.glitchFrame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.glitchFrame.active::before {
+  animation: clipGlitch 4s ease-in-out 1s infinite;
+}
+
+@keyframes clipGlitch {
+  0%   { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+  2%   { opacity: 0.8; clip-path: inset(10% 0 85% 0); transform: translateX(-8px); background: rgba(92, 255, 177, 0.12); }
+  4%   { opacity: 0.6; clip-path: inset(40% 0 50% 0); transform: translateX(6px); }
+  6%   { opacity: 0.7; clip-path: inset(70% 0 20% 0); transform: translateX(-5px); background: rgba(255, 50, 100, 0.1); }
+  8%   { opacity: 0.5; clip-path: inset(25% 0 70% 0); transform: translateX(4px); background: rgba(50, 100, 255, 0.08); }
+  10%  { opacity: 0.4; clip-path: inset(55% 0 40% 0); transform: translateX(-3px); }
+  12%  { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+  100% { opacity: 0; clip-path: inset(0 0 0 0); transform: translateX(0); }
+}
+
+@keyframes contactFrameGlitch {
+  0%   { transform: scale(1) translate(0, 0); filter: hue-rotate(0deg); }
+  20%  { transform: scale(1.01) translate(-2px, 1px); filter: hue-rotate(90deg); }
+  40%  { transform: scale(0.99) translate(2px, -1px); filter: hue-rotate(-90deg); }
+  60%  { transform: scale(1.01) translate(-1px, 2px); filter: hue-rotate(180deg); }
+  80%  { transform: scale(0.99) translate(1px, -2px); filter: hue-rotate(-180deg); }
+  100% { transform: scale(1) translate(0, 0); filter: hue-rotate(0deg); }
+}
+
+@keyframes contactFrameShake {
+  0%   { transform: translate(0,0) rotate(0) skewX(0); filter: none; }
+  2%   { transform: translate(-4px,-2px) rotate(-0.5deg) skewX(-1deg); filter: hue-rotate(90deg) brightness(1.15); }
+  4%   { transform: translate(4px,2px) rotate(0.5deg) skewX(1deg); filter: hue-rotate(-90deg) brightness(1.2); }
+  6%   { transform: translate(-2px,1px) rotate(-0.3deg) skewX(-0.5deg); filter: hue-rotate(45deg); }
+  8%   { transform: translate(2px,-1px) rotate(0.3deg) skewX(0.5deg); filter: hue-rotate(-45deg); }
+  10%  { transform: translate(-1px,0) rotate(-0.1deg); filter: hue-rotate(20deg); }
+  12%  { transform: translate(0,0) rotate(0) skewX(0); filter: none; }
+  100% { transform: translate(0,0) rotate(0) skewX(0); filter: none; }
+}
+
+/* ── Form fields staggered entrance (after frame appears at ~0.6s) ── */
+
+.glitchFrame.active .form > * {
+  animation: fieldIn 0.4s ease both;
+}
+
+.glitchFrame.active .form > :nth-child(1) { animation-delay: 0.72s; }
+.glitchFrame.active .form > :nth-child(2) { animation-delay: 0.88s; }
+.glitchFrame.active .form > :nth-child(3) { animation-delay: 1.04s; }
+.glitchFrame.active .form > :nth-child(4) { animation-delay: 1.20s; }
+
+@keyframes fieldIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Prism border SVG ── */
+
+.borderPulse {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  pointer-events: none;
+  z-index: 10;
+  border-radius: inherit;
+  overflow: visible;
+}
+
+.prismLine1 {
+  animation: contactPrismTravel1 4.2s linear infinite;
+}
+
+.prismLine2 {
+  animation: contactPrismTravel2 5.8s linear infinite;
+}
+
+/* Perimeter of rect 518×598 ≈ 2232 SVG units */
+@keyframes contactPrismTravel1 {
+  from { stroke-dashoffset: 0;     }
+  to   { stroke-dashoffset: -2287; }
+}
+
+@keyframes contactPrismTravel2 {
+  from { stroke-dashoffset: -1116; }
+  to   { stroke-dashoffset: -3388; }
+}
+
+/* ── Noise / glitch overlay ── */
+
+.glitchOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  animation: pixelNoise 0.3s steps(3) infinite;
+}
+
+@keyframes pixelNoise {
+  0%   { transform: translate(0, 0); }
+  20%  { transform: translate(-2px, 1px); }
+  40%  { transform: translate(1px, -2px); }
+  60%  { transform: translate(-1px, -1px); }
+  80%  { transform: translate(2px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Horizontal tear scan line */
+.glitchOverlay::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(92, 255, 177, 0.8) 10%,
+    rgba(92, 255, 177, 1) 50%,
+    rgba(92, 255, 177, 0.8) 90%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 12px rgba(92, 255, 177, 1),
+    0 0 30px rgba(92, 255, 177, 0.7),
+    0 -4px 0 rgba(255, 50, 100, 0.5),
+    0 4px 0 rgba(0, 200, 255, 0.5);
+  animation: horizontalTear 4s ease-out infinite;
+}
+
+@keyframes horizontalTear {
+  0%   { opacity: 0; top: 5%; }
+  3%   { opacity: 1; top: 15%; }
+  5%   { opacity: 0.9; top: 35%; }
+  7%   { opacity: 1; top: 55%; }
+  9%   { opacity: 0.8; top: 75%; }
+  12%  { opacity: 0; top: 90%; }
+  100% { opacity: 0; top: 5%; }
+}
+
+/* RGB split micro-glitch */
+.glitchOverlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 80, 0.15) 0%,
+    transparent 30%,
+    rgba(0, 255, 120, 0.12) 50%,
+    transparent 70%,
+    rgba(80, 120, 255, 0.15) 100%
+  );
+  animation: contactRgbSplit 4s ease-out infinite;
+}
+
+@keyframes contactRgbSplit {
+  0%   { opacity: 0.2; transform: translateX(0) skewX(0); }
+  2%   { opacity: 0.9; transform: translateX(-5px) skewX(-1.5deg); }
+  4%   { opacity: 1;   transform: translateX(5px) skewX(1.5deg); }
+  6%   { opacity: 0.8; transform: translateX(-3px) skewX(-1deg); }
+  8%   { opacity: 0.9; transform: translateX(3px) skewX(1deg); }
+  10%  { opacity: 0.5; transform: translateX(-2px) skewX(-0.5deg); }
+  12%  { opacity: 0.2; transform: translateX(0) skewX(0); }
+  100% { opacity: 0.2; transform: translateX(0) skewX(0); }
+}
+
+/* ── Corner accents ── */
+
+.frameCorner {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-color: var(--accent);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease 0.3s;
+}
+
+.glitchFrame.active .frameCorner {
+  opacity: 1;
+}
+
+.frameCorner[data-pos="tl"] {
+  top: -1px; left: -1px;
+  border-top-width: 2px; border-left-width: 2px;
+  border-top-left-radius: 20px;
+}
+.frameCorner[data-pos="tr"] {
+  top: -1px; right: -1px;
+  border-top-width: 2px; border-right-width: 2px;
+  border-top-right-radius: 20px;
+}
+.frameCorner[data-pos="bl"] {
+  bottom: -1px; left: -1px;
+  border-bottom-width: 2px; border-left-width: 2px;
+  border-bottom-left-radius: 20px;
+}
+.frameCorner[data-pos="br"] {
+  bottom: -1px; right: -1px;
+  border-bottom-width: 2px; border-right-width: 2px;
+  border-bottom-right-radius: 20px;
+}
+
+/* ═══════════════════════════════════════════
+   Inner Content & Form
+   ═══════════════════════════════════════════ */
+
+.innerContent {
+  position: relative;
+  z-index: 5;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formField {
+  display: grid;
+  gap: 6px;
+}
+
+.fieldError {
+  font-size: 12px;
+  color: var(--danger);
+  display: block;
+}
+
+/* ═══════════════════════════════════════════
+   Input wrapper + SVG focus border
+   ═══════════════════════════════════════════ */
+
+.inputWrapper {
+  position: relative;
+}
+
+/* Default: neutral border — no green tint */
+.inputWrapper :is(input, textarea) {
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+/* Focus: keep border neutral, suppress default ring — SVG takes over */
+.inputWrapper :is(input, textarea):focus,
+.inputWrapper :is(input, textarea):focus-visible {
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: none;
+  outline: none;
+  background: var(--panel);
+}
+
+/* SVG overlay handled entirely by <FocusBorder> React component via inline styles */
+
+/* Textarea — extends global .input */
+.textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.55;
+  font-family: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+}
+
+/* Submit button — extends global .btn .btn-primary */
+.submitBtn {
+  display: flex;
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.submitArrow {
+  font-size: 17px;
+  transition: transform 0.2s ease;
+}
+
+.submitBtn:hover .submitArrow {
+  transform: translateX(4px);
+}
+
+/* ═══════════════════════════════════════════
+   Success State
+   ═══════════════════════════════════════════ */
+
+.successState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.successIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(92, 255, 177, 0.10);
+  border: 1.5px solid rgba(92, 255, 177, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--accent);
+  box-shadow: 0 0 24px rgba(92, 255, 177, 0.25);
+  animation: successPop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes successPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.successTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.successSub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .section {
+    min-height: auto;
+    padding: 64px 16px;
+  }
+
+  .glitchFrame {
+    padding: 32px 24px;
+  }
+
+  .content {
+    gap: 28px;
+  }
+
+  .networkBg {
+    opacity: 0.35;
+  }
+
+  .nodeLabel {
+    display: none;
+  }
+
+  .nodePulseRing {
+    display: none;
+  }
+
+  .frameCorner {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 48px 12px;
+  }
+
+  .glitchFrame {
+    padding: 24px 16px;
+  }
+
+  .form {
+    gap: 16px;
+  }
+
+  .networkBg {
+    opacity: 0.20;
+  }
+}
