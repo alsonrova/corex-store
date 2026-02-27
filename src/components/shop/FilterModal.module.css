@@ -1,0 +1,424 @@
+/* ═══════════════════════════════════════════
+   Advanced Filter Modal — right slide-in panel
+   ═══════════════════════════════════════════ */
+
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 6, 10, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.backdropOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Panel */
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 101;
+  width: min(400px, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: rgba(6, 10, 18, 0.97);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border-left: 1px solid rgba(92, 255, 177, 0.15);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6), -1px 0 0 rgba(92, 255, 177, 0.05);
+  transform: translateX(100%);
+  transition: transform 340ms cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.panelOpen {
+  transform: translateX(0);
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.activeCount {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(92, 255, 177, 0.12);
+  border: 1px solid rgba(92, 255, 177, 0.30);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.closeBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+}
+
+.closeBtn:hover {
+  border-color: rgba(92, 255, 177, 0.35);
+  color: var(--accent);
+  background: rgba(92, 255, 177, 0.06);
+}
+
+/* ── Scrollable Body ── */
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(92, 255, 177, 0.2) transparent;
+}
+
+.body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: rgba(92, 255, 177, 0.2);
+  border-radius: 2px;
+}
+
+/* ── Section ── */
+.section {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── Price Range ── */
+.priceDisplay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.priceVal {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.priceSep {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.rangeGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rangeLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.range {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  outline: none;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid rgba(4, 6, 10, 0.9);
+  box-shadow: 0 0 8px rgba(92, 255, 177, 0.5);
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid rgba(4, 6, 10, 0.9);
+  box-shadow: 0 0 8px rgba(92, 255, 177, 0.5);
+  cursor: pointer;
+}
+
+/* ── Toggles ── */
+.toggleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleTrack {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  flex-shrink: 0;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1), background 200ms ease;
+}
+
+.toggle input:checked + .toggleTrack {
+  background: rgba(92, 255, 177, 0.20);
+  border-color: rgba(92, 255, 177, 0.45);
+}
+
+.toggle input:checked + .toggleTrack .toggleThumb {
+  transform: translateX(16px);
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(92, 255, 177, 0.5);
+}
+
+/* ── Rating ── */
+.ratingOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ratingBtn {
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+}
+
+.ratingBtn:hover {
+  border-color: rgba(92, 255, 177, 0.35);
+  color: var(--text-primary);
+}
+
+.ratingBtnActive {
+  border-color: rgba(92, 255, 177, 0.5);
+  background: rgba(92, 255, 177, 0.10);
+  color: var(--accent);
+}
+
+/* ── Brands ── */
+.clearBrands {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.8;
+}
+
+.clearBrands:hover {
+  opacity: 1;
+}
+
+.brandGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.brandGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brandGroupLabel {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(92, 255, 177, 0.5);
+}
+
+.brandList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: color 120ms ease;
+}
+
+.checkLabel:hover {
+  color: var(--text-primary);
+}
+
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkMark {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.checkMark::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 8px;
+  border: 2px solid #020c06;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.checkbox:checked + .checkMark {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 6px rgba(92, 255, 177, 0.4);
+}
+
+.checkbox:checked + .checkMark::after {
+  opacity: 1;
+}
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.resetBtn {
+  flex: 1;
+  justify-content: center;
+}
+
+.applyBtn {
+  flex: 2;
+  justify-content: center;
+}

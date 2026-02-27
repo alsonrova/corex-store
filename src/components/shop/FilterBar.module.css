@@ -1,0 +1,248 @@
+/* ═══════════════════════════════════════════
+   Filter Bar — sticky glass strip
+   ═══════════════════════════════════════════ */
+
+.bar {
+  position: sticky;
+  top: 62px;         /* just below the navbar */
+  z-index: 40;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(92, 255, 177, 0.08);
+  background: rgba(4, 6, 10, 0.88);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 60px;
+}
+
+/* ── Category pills ── */
+
+.pillsWrap {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  /* Fade edges for overflow hint */
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 92%, transparent 100%);
+}
+
+.pills {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 4px;
+  -ms-overflow-style: none;
+}
+
+.pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    transform 120ms ease;
+  white-space: nowrap;
+}
+
+.pill:hover {
+  border-color: rgba(92, 255, 177, 0.35);
+  color: var(--text-primary);
+  background: rgba(92, 255, 177, 0.05);
+}
+
+.pillActive {
+  background: linear-gradient(135deg, rgba(92, 255, 177, 0.22), rgba(92, 255, 177, 0.12));
+  border-color: rgba(92, 255, 177, 0.45);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(92, 255, 177, 0.12);
+}
+
+.pillActive:hover {
+  background: linear-gradient(135deg, rgba(92, 255, 177, 0.28), rgba(92, 255, 177, 0.18));
+}
+
+/* ── Right controls ── */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Sort select */
+
+.sortWrap {
+  position: relative;
+}
+
+.sortSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 6px 28px 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(11, 15, 22, 0.9);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 140ms ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239fb3c8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.sortSelect:focus {
+  outline: none;
+  border-color: rgba(92, 255, 177, 0.4);
+}
+
+/* Advanced filters button */
+
+.advancedBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(11, 15, 22, 0.9);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  white-space: nowrap;
+}
+
+.advancedBtn:hover {
+  border-color: rgba(92, 255, 177, 0.4);
+  color: var(--text-primary);
+}
+
+.advancedBtnActive {
+  border-color: rgba(92, 255, 177, 0.45);
+  color: var(--accent);
+  background: rgba(92, 255, 177, 0.06);
+}
+
+.filterDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(92, 255, 177, 0.8);
+  flex-shrink: 0;
+}
+
+/* Result count */
+
+.count {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Cart button */
+
+.cartBtn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(92, 255, 177, 0.20);
+  background: rgba(11, 15, 22, 0.9);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+  flex-shrink: 0;
+}
+
+.cartBtn:hover {
+  border-color: rgba(92, 255, 177, 0.55);
+  color: var(--accent);
+  background: rgba(92, 255, 177, 0.08);
+}
+
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #020c06;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(92, 255, 177, 0.5);
+}
+
+/* ═══════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .bar {
+    padding: 0 16px;
+  }
+
+  .inner {
+    gap: 8px;
+  }
+
+  .count {
+    display: none;
+  }
+
+  .sortSelect {
+    font-size: 11px;
+    padding: 5px 24px 5px 8px;
+  }
+
+  .advancedBtn {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bar {
+    top: 56px;
+    padding: 0 12px;
+  }
+
+  .inner {
+    height: 52px;
+  }
+}

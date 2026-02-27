@@ -25,7 +25,7 @@ export default function Navbar() {
       </a>
 
       <nav className={styles.navLinks} aria-label="Primary">
-        <a href="#products">Shop</a>
+        <a href="/shop">Shop</a>
         <a href="#sponsors">Partners</a>
         <a href="#admin">Admin</a>
         <a href="#about">About</a>
