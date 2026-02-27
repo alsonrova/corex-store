@@ -59,6 +59,9 @@ export default function ProductCard({ product, onAddToCart, cartItems }: Props) 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      {/* ── Top shimmer line ── */}
+      <div className={styles.shimmer} aria-hidden />
+
       {/* ── Image ── */}
       <div className={styles.imageWrap}>
         <img

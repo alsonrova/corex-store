@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import AnimatedBackground from "../components/AnimatedBackground";
 import CursorGlow from "../components/CursorGlow";
 import Navbar from "../components/Navbar";
+import Preloader from "../components/Preloader";
 import SmoothScroll from "../components/SmoothScroll";
 import "./globals.css";
 
@@ -49,6 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${specialElite.variable} ${bebasNeue.variable} ${playPretend.variable}`}>
+        <Preloader />
         <AnimatedBackground />
         <CursorGlow />
         <Navbar />
