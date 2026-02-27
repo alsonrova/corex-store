@@ -471,7 +471,7 @@ export default function CTASection() {
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
-              <a href="/store" className={styles.ctaButton}>
+              <a href="/shop" className={styles.ctaButton}>
                 <span className={styles.ctaText}>Enter the store</span>
                 <span className={styles.ctaArrow}>&rarr;</span>
                 <div className={styles.ctaGlow} />

@@ -292,7 +292,7 @@ export default function DreamSetupSection() {
         <div className={`${styles.ellipseTrack} ${hasRevealed ? styles.trackVisible : ""}`} />
       </div>
 
-      <a href="#products" className={`${styles.ctaLink} ${isCtaVisible ? styles.ctaVisible : ""}`}>
+      <a href="/shop" className={`${styles.ctaLink} ${isCtaVisible ? styles.ctaVisible : ""}`}>
         Explore the Store
         <span className={styles.arrow}>→</span>
       </a>

@@ -49,7 +49,7 @@ export default function HeroShowcase() {
 
       {/* CTA */}
       <div className={styles.ctaBlock}>
-        <a className={styles.ctaPrimary} href="#products">
+        <a className={styles.ctaPrimary} href="/shop">
           Explore the store
         </a>
         <a className={styles.ctaSecondary} href="#concept">
