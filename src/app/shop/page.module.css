@@ -159,6 +159,7 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  z-index: 1;
   transition:
     background 140ms ease,
     border-color 140ms ease,
